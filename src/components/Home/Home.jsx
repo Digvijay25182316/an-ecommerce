@@ -18,7 +18,7 @@ function Home() {
   
   return (
     <section>
-      <Stack >
+      <Stack minHeight={"100vh"}>
       <VStack alignItems={"center"} justifyContent={"center"}>
       <Box display={"flex"} justifyContent={"center"} flexDirection={"column"} alignItems={"center"}>
       <Categories/>
