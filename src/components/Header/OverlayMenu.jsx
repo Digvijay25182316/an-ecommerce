@@ -4,7 +4,7 @@ import { RiHome3Line} from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { BiSolidDashboard } from "react-icons/bi";
 
-const OverlayMenu = ({onClose}) => {
+const OverlayMenu = ({onClose,isAdmin}) => {
   return (
     <Box w="full" h="full" p={4} display={"flex"} flexDirection={"column"}>
       <VStack spacing={4} align="start">
@@ -17,14 +17,14 @@ const OverlayMenu = ({onClose}) => {
             </Button>
           </Link>
         </Stack>
-        <Stack direction="row" align="center" my={"20px"}>
+        {isAdmin&&<Stack direction="row" align="center" my={"20px"}>
           <Link to="/admin/dashboard" >
             <Button gap={'20px'} onClick={onClose} colorScheme="yellow">
                 <Icon as={BiSolidDashboard } boxSize={6} />
                 <Text children="Dashboard"/>
             </Button>
           </Link>
-        </Stack>
+        </Stack>}
             <Text children="New" fontSize={"20px"} fontWeight={"bold"} my={"10px"}/>
         <Stack direction="row" align="center" my={"10px"}>
         <Link to="/myprofile">

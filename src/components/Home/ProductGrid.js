@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   SimpleGrid,
@@ -11,8 +11,10 @@ import {
 import { Link } from 'react-router-dom';
 import RatingComponent from '../Products/RatingComponent';
 
-const ProductGrid = ({ products, productsPerPage, onPageChange }) => {
+const ProductGrid = ({ products, onPageChange }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  // const [products, setProducts] = useState([]);
+  const [productsPerPage, setProductsPerPage] = useState(30);
 
   const totalPages = Math.ceil(products.length / productsPerPage);
 
@@ -43,10 +45,10 @@ const ProductGrid = ({ products, productsPerPage, onPageChange }) => {
       <SimpleGrid columns={[1, 2, 3, 4, 5]} spacing={6}>
         {visibleProducts &&
           visibleProducts.map((product, id) => (
-            <Link to={`/product/${product.id}`} key={product.id}>
+            <Link to={`/product/${product.id}`} key={product._id}>
               <Box
-                id={product.id}
-                key={product.id}
+                id={product._id}
+                key={product._id}
                 p="4"
                 borderWidth="1px"
                 borderRadius="md"

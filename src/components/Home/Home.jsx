@@ -4,17 +4,23 @@ import { RxCross1 } from 'react-icons/rx';
 import Sidebar from './Sidebar';
 import ProductGrid from './ProductGrid';
 import Categories from './Categories';
+import axios from 'axios';
+import { SERVER_URL } from '../../App';
 
+const getProducts = async () => {
+  const data = await axios.get(`${SERVER_URL}/products`)
+  return data;
+};
 
 function Home() {
   const [sidebarOpen,setSideBarOpen] =useState(false)
-  const [products,setProducts] = useState("")
+  const [products,setProducts]=useState([])
 
-  useEffect(()=>{
-      fetch('https://fakestoreapi.com/products')
-            .then(res=>res.json())
-            .then(json=>setProducts(json))
-  },[])
+  useEffect(() => {
+    getProducts().then(({ data }) => {
+      setProducts(data.products);
+    });
+  },[]);
   
   return (
     <section>
@@ -37,7 +43,7 @@ function Home() {
           <Sidebar/>
     </Box>}
     
-      <ProductGrid products={products} productsPerPage={30}/>
+      {products?<ProductGrid products={products}/>:<Box><Text>Products are loading</Text></Box>}
     
     </HStack>
     </Stack>

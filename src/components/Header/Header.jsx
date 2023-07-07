@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Avatar, Box, Button, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, VStack, useDisclosure } from '@chakra-ui/react'
 import {RxHamburgerMenu}  from "react-icons/rx"
 import {BsCart2,BsCartCheckFill}  from "react-icons/bs"
@@ -7,13 +7,28 @@ import {ColorModeSwitcher} from "../../ColorModeSwitcher"
 import { Link, useLocation} from 'react-router-dom'
 import OverlayMenu from './OverlayMenu'
 import {FcSettings} from "react-icons/fc"
-
-function Header({isAuthenticated=true,user}) {  
+import { CartContext } from '../../context/store'
+import Cookies from 'js-cookie'
+import axios from 'axios'
+import { SERVER_URL } from '../../App'
+import { toast } from 'react-hot-toast'
+  const logoutfunc=async()=>{
+    const response = await axios.get(`${SERVER_URL}/logout`)
+    return response
+  }
+function Header() {  
+  
+  const {user,isAuthenticated,isAdmin,loggedout}=useContext(CartContext)
   const location = useLocation()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isSearch,setIsSearch] = useState(false)
   const onClickSearch =()=>{
     setIsSearch(!isSearch)
+  }
+  const logoutHandler=()=>{
+    Cookies.remove("user")
+    Cookies.remove("token")
+    logoutfunc().then(data=>{toast.success(data.data.message);loggedout()}).catch(err=>toast.error(err.response.message))
   }
   const isAdminRoute = location.pathname.startsWith("/admin");
   return (
@@ -34,11 +49,11 @@ function Header({isAuthenticated=true,user}) {
           <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader bg={"yellow.400"} textAlign={"center"}>Hi! {user}</ModalHeader>
+          <ModalHeader bg={"yellow.400"} textAlign={"center"}>Hi! {user.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody >
             <Stack height={"60vh"}>
-            <OverlayMenu onClose={onClose}/>
+            <OverlayMenu onClose={onClose} isAdmin={isAdmin}/>
             </Stack>
           </ModalBody>
           <ModalFooter display={"flex"} alignItems={"center"} flexDirection={"column"}>
@@ -69,7 +84,7 @@ function Header({isAuthenticated=true,user}) {
             </Stack>
             </Box>
             {isAuthenticated&&<Box>
-              <Button colorScheme='yellow'>
+              <Button colorScheme='yellow' onClick={logoutHandler}>
                 <Text children="LOGOUT"/>
               </Button>
             </Box>}

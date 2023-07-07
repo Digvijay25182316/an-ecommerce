@@ -92,7 +92,7 @@ function DashBoard() {
         <Box fontWeight={'bold'} fontSize={'34px'} margin={'23px'}>
           <Text>DashBoard</Text>
         </Box>
-        <Stack width={'90vw'} textAlign={'center'}>
+        <Stack width={'90vw'} textAlign={'center'} color={'black'}>
           <Box p={4}>
             <Grid templateColumns="repeat(2, 1fr)" gap={6}>
               <Box p={4} borderWidth="1px" borderRadius="md" bg="white">

@@ -12,7 +12,7 @@ const Rating = ({ initialRating }) => {
   return (
     <Stack direction="row" spacing={1}>
       {[1, 2, 3, 4, 5].map((value) => (
-        <Box key={value} color={value <= rating.rate ? 'coral' : 'gray.300'} cursor="pointer">
+        <Box key={value} color={value <= rating ? 'coral' : 'gray.300'} cursor="pointer">
           <Icon
             as={StarIcon}
             boxSize={4}

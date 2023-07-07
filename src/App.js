@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { ChakraProvider, theme } from '@chakra-ui/react';
 import Header from './components/Header/Header';
 import Home from './components/Home/Home';
@@ -14,13 +14,16 @@ import ChangePassword from './components/Profile/ChangePassword';
 import UpdateProfile from './components/Profile/UpdateProfile';
 import ForgetPassword from './components/Auth/ForgetPassword';
 import Products from './components/Products/Products';
-import { ContextProvider } from './context/store';
+import { ContextProvider, UseUserContext } from './context/store';
 import Users from './Admin/HandleUsers/Users';
 import DashBoard from './Admin/DashBoard/DashBoard';
 import Orders from './Admin/HandleOrder/Orders';
 import ResetPassword from './components/Auth/ResetPassword';
 import ConfirmOrder from './components/Cart/ConfirmOrder';
 import CreateProduct from './Admin/CreateProduct/CreateProduct1';
+import { Toaster } from 'react-hot-toast';
+export const SERVER_URL =
+  process.env.SERVER_URL || 'http://localhost:4000/api/v1';
 
 function App() {
   return (
@@ -53,6 +56,7 @@ function App() {
             <Route path="/admin/orders" element={<Orders />} />
           </Routes>
           <Footer />
+          <Toaster position="top-center" reverseOrder={false} />
         </Router>
       </ChakraProvider>
     </ContextProvider>

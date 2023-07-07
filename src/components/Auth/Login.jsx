@@ -1,15 +1,41 @@
 import { Box, Button, Container, FormLabel, Heading, Input, VStack } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import axios from "axios";
+import { SERVER_URL } from '../../App'
+import { CartContext } from '../../context/store';
+import CryptoJS from 'crypto-js';
+import Cookies from 'js-cookie';
+import { toast } from 'react-hot-toast';
+
+const ENCRYPTION_KEY = "364653a4df41c97226029c7f516ff88b"
+
+const loginuser = async(email,password)=>{
+    const data = await axios.post(`${SERVER_URL}/login`,{email,password},{
+        withCredentials:true
+    })
+    return data
+}
 
 function LoginPage() {
-    const [email,setEmail] = useState()
-    const [password,setPassword] = useState()
+    const [email,setEmail] = useState("")
+    const [password,setPassword] = useState("")
+    const {storeUser} = useContext(CartContext)
+    const handleLogin=(event)=>{
+        event.preventDefault()
+        loginuser(email,password).then(({data})=>{
+            Cookies.set('token', data.token, { expires: 7 }); // Expires in 7 days
+            Cookies.set('user',JSON.stringify(data.user), { expires: 7 }); // Expires in 7 days
+            toast.success(data.message)
+            storeUser(data)
+        }
+        ).catch(err=>toast.error(err.response.data.message))
+    }       
   return (
     <Container h={'95vh'}>
         <VStack h={"full"} justifyContent={'center'} spacing={'16'}>
             <Heading children="Login"/>
-            <form style={{width:"100%"}}>
+            <form style={{width:"100%"}} onSubmit={handleLogin}>
                 <Box my={"4"}>
                     
                 <FormLabel htmlFor='email' children="email Address"/>
