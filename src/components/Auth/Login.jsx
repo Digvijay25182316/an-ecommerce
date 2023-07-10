@@ -28,10 +28,10 @@ function LoginPage() {
             Cookies.set('token', data.token, { expires: 7 }); // Expires in 7 days
             Cookies.set('user',JSON.stringify(data.user), { expires: 7 }); // Expires in 7 days
             toast.success(data.message)
-            storeUser(data)
+            storeUser(data.user)
             navigate("/")
         }
-        ).catch(err=>toast.error(err.response.data.message))
+        ).catch(err=>toast.error(err.response.data.message||err.message))
     }       
   return (
     <Container h={'95vh'}>
