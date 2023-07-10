@@ -45,12 +45,13 @@ function LoginPage() {
                 focusBorderColor='yellow.400'
                 placeholder='abc@gmail.com'
                 type='email'
+                autoComplete='on'
                 />
                 </Box>
                 <Box my={"4"}>
 
                 <FormLabel htmlFor='password' children="password"/>
-                <Input required id='password' value={password} onChange={e=>setPassword(e.target.value)} placeholder='Enter your password' type='password' focusBorderColor='yellow.400'/>
+                <Input required id='password' value={password} onChange={e=>setPassword(e.target.value)} placeholder='Enter your password' type='password' focusBorderColor='yellow.400' autoComplete='on'/>
                 </Box>
                 <Box>
                     <Link to={'/forgetpassword'}><Button fontSize={'sm'} variant={'link'}>Forget Password</Button></Link>
