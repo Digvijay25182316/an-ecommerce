@@ -10,7 +10,7 @@ const CartContext = createContext();
 const ContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
   const [cartItem, setCartItem] = useState([children]);
   const [user, setUser] = useState({});
 

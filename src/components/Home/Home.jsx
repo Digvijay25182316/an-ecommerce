@@ -6,6 +6,7 @@ import ProductGrid from './ProductGrid';
 import Categories from './Categories';
 import axios from 'axios';
 import { SERVER_URL } from '../../App';
+import { toast } from 'react-hot-toast';
 
 const getProducts = async () => {
   const data = await axios.get(`${SERVER_URL}/products`)
@@ -16,10 +17,11 @@ function Home() {
   const [sidebarOpen,setSideBarOpen] =useState(false)
   const [products,setProducts]=useState([])
 
+
   useEffect(() => {
     getProducts().then(({ data }) => {
       setProducts(data.products);
-    });
+    }).catch(err=>toast.error(err.message));
   },[]);
   
   return (

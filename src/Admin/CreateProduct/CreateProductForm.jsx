@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import { Box, Button, VStack,Input,FormLabel, SimpleGrid} from '@chakra-ui/react'
+import axios from 'axios'
+import { SERVER_URL } from '../../App'
+import { toast } from 'react-hot-toast'
 const fileuploadStyle={
     cursor:"pointer",
     marginLeft:"-5%",
@@ -10,17 +13,38 @@ const fileuploadStyle={
     backgroundColor:"white",
 }
 
+const createProduct =async(formdata,token)=>{
+    const data = await axios.post(`${SERVER_URL}/createproduct`,formdata,{headers:{
+        "Content-Type":"multipart/form-data",
+        Authorization:`Bearer <${token}>`
+    },
+    withCredentials:true
+})
+    return data
+}
+
 function CreateProductForm() {
-    const [name,setName] = useState()
-    const [price,setPrice] = useState()
-    const [description,setDescription] = useState()
-    const [category,setCategory] = useState()
-    const [quantity,setQuantity] = useState()
-    const [features,setFeatures] = useState()
-    const [brand,setBrand] =useState()
+    const [name,setName] = useState("")
+    const [price,setPrice] = useState("")
+    const [description,setDescription] = useState("")
+    const [category,setCategory] = useState("")
+    const [quantity,setQuantity] = useState("")
+    const [features,setFeatures] = useState("")
+    const [brand,setBrand] =useState("")
     const [imagePrev,setImagePrev] = useState('')
     const [image,setImage] = useState('')
-    const [matrial,setMatrial] = useState()
+    const [material,setMaterial] = useState("")
+
+    const formdata =new FormData()
+    formdata.append("name",name)
+    formdata.append("price",price)
+    formdata.append("description",description)
+    formdata.append("category",category)
+    formdata.append("quantity",quantity)
+    formdata.append("features",features)
+    formdata.append("brand",brand)
+    formdata.append("image",image)
+    formdata.append("material",material)
 
     const changeImageHandler=(e)=>{
         const file=e.target.files[0];
@@ -31,9 +55,14 @@ function CreateProductForm() {
             setImage(file)
         }
     }
+
+    const handleSubmit =(e)=>{
+        e.preventDefault()
+        createProduct(formdata).then(data=>console.log(data)).catch(err=>{toast.error(err.response.data.message||err.message);console.log(err)})
+    }
   return (
     <VStack h={"full"} justifyContent={'center'} spacing={'16'} alignItems={"center"}>
-            <form style={{width:"90vw"}}>
+            <form style={{width:"90vw"}} onSubmit={handleSubmit}>
                 <SimpleGrid columns={[1, 2, 3, 4]} spacing={"6"} alignItems={"center"}>
                 <Box my={"4"}>
                     
@@ -83,11 +112,11 @@ function CreateProductForm() {
                 <Box my={"4"}>
 
                 <FormLabel htmlFor='material' children="Material"/>
-                <Input required id='material' value={matrial} onChange={e=>setMatrial(e.target.value)} placeholder='material of product' type='text' focusBorderColor='purple.400'/>
+                <Input required id='material' value={material} onChange={e=>setMaterial(e.target.value)} placeholder='material of product' type='text' focusBorderColor='purple.400'/>
                 </Box>
                 <Box>
                 <FormLabel htmlFor='features' children="Features"/>
-                <Input required id='features' value={features} onChange={e=>setFeatures(e.target.value)} placeholder='Confirm description' type='description' focusBorderColor='purple.400'/>
+                <Input required id='features' value={features} onChange={e=>setFeatures(e.target.value)} placeholder='Features' type='description' focusBorderColor='purple.400'/>
                 </Box>
                 </SimpleGrid>
                 <Box my={"4"}>

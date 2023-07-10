@@ -1,10 +1,11 @@
 import { Avatar, Box, Button, Container, FormLabel, Heading, Input, VStack } from '@chakra-ui/react'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { SERVER_URL } from '../../App'
 import { toast } from 'react-hot-toast'
 import Cookies from 'js-cookie'
+import { CartContext } from '../../context/store'
 export const fileuploadStyle={
         cursor:"pointer",
         marginLeft:"-5%",
@@ -19,10 +20,13 @@ export const fileuploadStyle={
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          withCredentials:true
         });
         return data;
     }
 function Register() {
+    const navigate =useNavigate()
+    const {storeUser} = useContext(CartContext)
     const [name,setName] = useState("")
     const [imagePrev,setImagePrev] = useState('')
     const [file,setFile] = useState('')
@@ -59,6 +63,8 @@ function Register() {
             toast.success(data.data.message)
             Cookies.set('token', data.data.token, { expires: 7 }); // Expires in 7 days
             Cookies.set('user',JSON.stringify(data.data.user), { expires: 7 }); // Expires in 7 days
+            storeUser(data.data)
+            navigate("/")
         }).catch((err)=>toast.error(err.response.data.message))}
     }
   return (

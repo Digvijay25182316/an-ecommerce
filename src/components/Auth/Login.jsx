@@ -1,6 +1,6 @@
 import { Box, Button, Container, FormLabel, Heading, Input, VStack } from '@chakra-ui/react'
 import React, { useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from "axios";
 import { SERVER_URL } from '../../App'
 import { CartContext } from '../../context/store';
@@ -18,6 +18,7 @@ const loginuser = async(email,password)=>{
 }
 
 function LoginPage() {
+    const navigate = useNavigate()
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
     const {storeUser} = useContext(CartContext)
@@ -28,6 +29,7 @@ function LoginPage() {
             Cookies.set('user',JSON.stringify(data.user), { expires: 7 }); // Expires in 7 days
             toast.success(data.message)
             storeUser(data)
+            navigate("/")
         }
         ).catch(err=>toast.error(err.response.data.message))
     }       

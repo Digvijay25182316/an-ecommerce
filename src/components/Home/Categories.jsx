@@ -35,7 +35,7 @@ function Categories() {
   display:"none"
 }}}>
   {
-  categories&&categories.map((item,index)=>
+  category&&category.map((item,index)=>
   <Button key={index} onClick={()=>setCategory(item)} minW={"60"}>
     <Text children={item}/>
   </Button>

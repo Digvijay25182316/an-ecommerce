@@ -1,27 +1,42 @@
 import { Avatar, Button, Container, HStack, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, VStack, useDisclosure } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { fileuploadStyle } from '../Auth/Register'
+import axios from 'axios'
+import { SERVER_URL } from '../../App'
+import { CartContext } from '../../context/store'
+import Cookies from 'js-cookie'
+import { toast } from 'react-hot-toast'
+
+const changeProfileImage = async(formdata,token)=>{
+    const data =await axios.put(`${SERVER_URL}/updateprofilepicture`,formdata,{
+        headers:{
+            "Content-Type":"application/json",
+            Authorization: `Bearer <${token}>`
+          },
+          withCredentials:true
+    })
+    return data
+}
+
+const getUser =()=>{
+    const user =Cookies.get("user")
+    return user
+}
 
 function Profile() {
-    const user = {
-        name:"Digvijay",
-        email:"user@gmail.com",
-        CreatedAt:String(new Date().toISOString()),
-        role:'user',
-        subscription:{
-            status:"active"
-        },
-        playlist:[
-            {
-                course:"shdfgsjd",poster:"hdgfjdsfhge"
-            }
-        ]
-    }
+    const [user,setUser]=useState({})
+
+    useEffect(()=>{
+        const user=getUser()
+        if(user){
+            setUser(user)
+            setUser(JSON.parse(user))
+        }
+    },[])
 
     const changeImageSubmitHandler=({e,image})=>{
         e.preventDefault()
-        console.log(image)
     }
 
     const {isOpen,onClose , onOpen} =useDisclosure()
@@ -30,8 +45,8 @@ function Profile() {
         <Heading children='Profile' m={'8'} textTransform={'uppercase'}/>
         <Stack justifyContent={'flex-start '} direction={['column','row']} alignItems={'center'} spacing={['8','16']} padding={'8'}>
             <VStack>
-                <Avatar boxSize={'48'}/>
-                <Button onClick={onOpen} colorScheme='orange' variant={'ghost'}>
+                &&<Avatar boxSize={'48'} src={user.avatar&&`${user.avatar.url}`}/>
+                <Button onClick={onOpen} colorScheme='yellow' variant={'ghost'} color={"yellow.400"}>
                     Change Photo
                 </Button>
             </VStack>
@@ -46,7 +61,7 @@ function Profile() {
                 </HStack>
                 <HStack>
                     <Text children="Created At" fontWeight={'bold'}/>
-                    <Text children={user.CreatedAt.split('T')[0]}/>
+                    <Text children={new Date(user.createdAt).toUTCString()}/>
                 </HStack>
                     <Stack direction={['column','row']} alignItems={'center'}>
                         <Link to={'/updateprofile'}>
@@ -67,6 +82,10 @@ function Profile() {
 export default Profile
 
 function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}){
+    const getToken=()=>{
+        const token = Cookies.get("token")
+        return token
+    }
     const [image,setImage] = useState()
     const [imagePrev,setImagePrev] = useState()
     const changeImage=(e)=>{
@@ -79,14 +98,18 @@ function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}){
             setImage(file)
         }
     }
+    // const formdata=new FormData()
+    // formdata.append("file",image)
+    
 
     const Closehandler=(e)=>{
+        const token = getToken()
         e.preventDefault();
-        console.log(image)
+        if(token){
+        changeProfileImage(image,token).then(data=>console.log(data)).catch(err=>{toast.error(err.response.data.message||err.message);console.log(err)})}
         onClose();
         setImage('')
         setImagePrev('')
-
     }
     return(
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -100,7 +123,7 @@ function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}){
                                     <VStack spacing={'8'}>
                                         {imagePrev&&<Avatar src={imagePrev} boxSize={'48'}/>}
                                         <Input  type='file' css={{"&::file-selector-button":fileuploadStyle}} onChange={changeImage}/>
-                                        <Button onClick={Closehandler} w={'full'} colorScheme='orange' type='submit'>Close</Button>
+                                        <Button onClick={Closehandler} w={'full'} colorScheme='yellow' type='submit'>Submit and Close</Button>
                                     </VStack>
                                 </form>
                             </Container>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import { ChakraProvider, theme } from '@chakra-ui/react';
 import Header from './components/Header/Header';
 import Home from './components/Home/Home';
@@ -14,7 +14,7 @@ import ChangePassword from './components/Profile/ChangePassword';
 import UpdateProfile from './components/Profile/UpdateProfile';
 import ForgetPassword from './components/Auth/ForgetPassword';
 import Products from './components/Products/Products';
-import { ContextProvider, UseUserContext } from './context/store';
+import { ContextProvider } from './context/store';
 import Users from './Admin/HandleUsers/Users';
 import DashBoard from './Admin/DashBoard/DashBoard';
 import Orders from './Admin/HandleOrder/Orders';
@@ -23,7 +23,8 @@ import ConfirmOrder from './components/Cart/ConfirmOrder';
 import CreateProduct from './Admin/CreateProduct/CreateProduct1';
 import { Toaster } from 'react-hot-toast';
 export const SERVER_URL =
-  process.env.REACT_APP_SERVER_URL || 'http://localhost:4000/api/v1';
+  process.env.REACT_APP_SERVER_URL ||
+  'https://an-ecommerce-backend.onrender.com/api/v1';
 
 function App() {
   return (

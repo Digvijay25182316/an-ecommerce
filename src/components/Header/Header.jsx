@@ -61,7 +61,7 @@ function Header() {
             <Box display={"flex"} gap={"23px"}>
           {!isAuthenticated?(
               <Link to={"/login"}>
-                <Button variant={"solid"} colorScheme='orange' onClick={onClose}>
+                <Button variant={"solid"} colorScheme='yellow' onClick={onClose}>
                   <Text children={"LOGIN"}/>            
                 </Button>
               </Link>
@@ -95,7 +95,7 @@ function Header() {
         <Box display={"flex"} alignItems={"center"} gap={"5px"}>
             {!isAuthenticated?(
               <Link to={"/login"}>
-                <Button variant={"solid"} colorScheme='orange' onClick={onClose}>
+                <Button variant={"solid"} colorScheme='yellow' onClick={onClose}>
                   <Text children={"LOGIN"}/>            
                 </Button>
               </Link>
