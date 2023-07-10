@@ -12,6 +12,9 @@ const ENCRYPTION_KEY = "364653a4df41c97226029c7f516ff88b"
 
 const loginuser = async(email,password)=>{
     const data = await axios.post(`${SERVER_URL}/login`,{email,password},{
+        headers:{
+          "Content-Type" :"application/json"
+        },
         withCredentials:true
     })
     return data
@@ -31,7 +34,7 @@ function LoginPage() {
             storeUser(data.user)
             navigate("/")
         }
-        ).catch(err=>toast.error(err.response.data.message||err.message))
+        ).catch(err=>console.log(err))
     }       
   return (
     <Container h={'95vh'}>
