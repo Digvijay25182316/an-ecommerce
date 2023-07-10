@@ -1,10 +1,10 @@
 import { Avatar, Button, Container, HStack, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, VStack, useDisclosure } from '@chakra-ui/react'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { fileuploadStyle } from '../Auth/Register'
 import axios from 'axios'
 import { SERVER_URL } from '../../App'
-import { CartContext } from '../../context/store'
+
 import Cookies from 'js-cookie'
 import { toast } from 'react-hot-toast'
 
@@ -98,8 +98,8 @@ function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}){
             setImage(file)
         }
     }
-    // const formdata=new FormData()
-    // formdata.append("file",image)
+    const formdata=new FormData()
+    formdata.append("file",image)
     
 
     const Closehandler=(e)=>{

@@ -1,14 +1,11 @@
 import { Box, Button, Container, FormLabel, Heading, Input, VStack } from '@chakra-ui/react'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from "axios";
 import { SERVER_URL } from '../../App'
 import { CartContext } from '../../context/store';
-import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
 import { toast } from 'react-hot-toast';
-
-const ENCRYPTION_KEY = "364653a4df41c97226029c7f516ff88b"
 
 const loginuser = async(email,password)=>{
     const data = await axios.post(`${SERVER_URL}/login`,{email,password},{
