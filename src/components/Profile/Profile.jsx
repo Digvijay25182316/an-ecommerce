@@ -36,7 +36,6 @@ function Profile() {
     }
     useEffect(()=>{
         const token = CookieFields.getToken()
-        console.log(typeof token)
         loadingHandler(true)
         getProfile(token).then(data=>{
             // Cookies.remove("user")
