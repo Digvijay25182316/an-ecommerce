@@ -1,7 +1,9 @@
 // MyContext.js
+import toast from 'react-hot-toast';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import CookieFields from './utils';
 
 // Create a new context
 const CartContext = createContext();
@@ -10,9 +12,13 @@ const CartContext = createContext();
 const ContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState('');
-  const [isAdmin, setIsAdmin] = useState(true);
-  const [cartItem, setCartItem] = useState([children]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [cartItem, setCartItem] = useState([]);
   const [user, setUser] = useState({});
+  const [isloading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+  console.log(cartItem);
 
   useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use(config => {
@@ -30,17 +36,53 @@ const ContextProvider = ({ children }) => {
       setIsAuthenticated(true);
       if (user.role === 'admin') {
         setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
       }
     }
-
+    setCartItem(CookieFields.getCartItem());
     // Clean up the interceptor on component unmount
     return () => {
       axios.interceptors.request.eject(requestInterceptor);
     };
   }, []);
-
   const addToCart = item => {
-    setCartItem([...cartItem, item]);
+    const products = CookieFields.getProducts();
+    if (!products) {
+      const newProducts = [];
+      newProducts.push({ id: item._id, quantity: 1 });
+      const serializedArray = JSON.stringify(newProducts);
+      // Set the cookie with the serialized array
+      try {
+        document.cookie = `CartItems=${encodeURIComponent(
+          serializedArray
+        )}; SameSite=None; Secure`;
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      const parsedProducts = JSON.parse(products);
+      let itemExists = false;
+      for (let i = 0; i < parsedProducts.length; i++) {
+        if (parsedProducts[i].id === item._id) {
+          // Increment the quantity of the existing item
+          parsedProducts[i].quantity += 1;
+          itemExists = true;
+          break;
+        }
+      }
+
+      if (!itemExists) {
+        // Add the item to the cart with quantity 1
+        parsedProducts.push({ id: item._id, quantity: 1 });
+      }
+
+      const serializedArray = JSON.stringify(parsedProducts);
+      // Update the cookie with the updated serialized array
+      document.cookie = `CartItems=${encodeURIComponent(
+        serializedArray
+      )}; SameSite=None; Secure`;
+    }
   };
 
   const removeFromCart = item => {
@@ -52,9 +94,33 @@ const ContextProvider = ({ children }) => {
     setIsAuthenticated(true);
     setUser(data.user);
     setToken(data.token);
-    if (data.user.role === 'admin') {
+    if (data.role === 'admin') {
       setIsAdmin(true);
     }
+  };
+
+  const successHandler = value => {
+    if (value.message) {
+      toast.success(value.message);
+    }
+    setIsLoading(false);
+    setIsError(false);
+    setIsSuccess(true);
+  };
+  const ErrorHandler = value => {
+    if (value.response.data.message) {
+      toast.error(value.response.data.message);
+    } else if (value.message) {
+      toast.error(value.message);
+    } else {
+      toast.error('Something bad has happend');
+    }
+    setIsLoading(false);
+    setIsSuccess(false);
+    setIsError(true);
+  };
+  const loadingHandler = value => {
+    setIsLoading(value);
   };
 
   const loggedout = () => {
@@ -75,10 +141,13 @@ const ContextProvider = ({ children }) => {
     isAdmin,
     token,
     storeUser,
+    loadingHandler,
+    successHandler,
+    ErrorHandler,
+    isloading,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
 export { CartContext, ContextProvider };
-export const UseUserContext = () => useContext(CartContext);

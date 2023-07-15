@@ -1,30 +1,27 @@
 import { Button, Container, Heading, Input, VStack } from '@chakra-ui/react'
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { SERVER_URL } from '../../App'
-import { toast } from 'react-hot-toast'
-import Cookies from 'js-cookie'
+import CookieFields from '../../context/utils'
+import { CartContext } from '../../context/store'
 
 const changePassword=async(oldPassword,newPassword,token)=>{
   const data = await axios.put(`${SERVER_URL}/changepassword`,{oldPassword,newPassword},{headers:{
     Authorization: `Bearer <${token}>`
-  }})
+  },withCredentials:true})
   return data
-}
-const getToken=()=>{
-  const token=Cookies.get("token")
-  return token
 }
 
 function ChangePassword() {
-  
-    const [oldPassword,setOldPassword] = useState()
-    const [newPassword,setNewPassword] = useState()
+  const {loadingHandler,successHandler,ErrorHandler}  =useContext(CartContext)
+    const [oldPassword,setOldPassword] = useState("")
+    const [newPassword,setNewPassword] = useState("")
     const submitHandler=(e)=>{
       e.preventDefault()
-      const token =getToken()
+      const token =CookieFields.getToken()
       if(token){
-      changePassword(oldPassword,newPassword,token).then(data=>toast.success(data.data.message)).catch(err=>toast.error(err.response.data.message||err.message))}
+        loadingHandler(true)
+      changePassword(oldPassword,newPassword,token).then(data=>{successHandler(data.data)}).catch(err=>ErrorHandler(err))}
     }
     
   return (

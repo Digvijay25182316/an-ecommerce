@@ -10,8 +10,10 @@ import {
   Box,
   Stack,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { RiDeleteBinLine } from 'react-icons/ri';
+import FullScreenModal from './FullScreenModal';
 const cartItems = [
   {
     id: 1,
@@ -113,12 +115,15 @@ const cartItems = [
       'Experience freedom and convenience with our wireless mouse. Say goodbye to tangled cords and enjoy precise tracking and ergonomic design. With a reliable wireless connection, this mouse allows you to work or play with ease. Boost your productivity and make computing effortless.',
   },
 ];
-const ProductTable = () => {
-  const [products, setproducts] = useState(cartItems);
+const ProductTable = ({ productArray }) => {
+  const [products, setproducts] = useState(productArray);
+  const { onOpen, isOpen, onClose } = useDisclosure();
+  console.log(products);
+  // console.log(products);
 
   const handleDeleteProduct = id => {
-    const updatedproducts = products.filter(Product => Product.id !== id);
-    setproducts(updatedproducts);
+    // const updatedproducts = products.filter(Product => Product._id !== id);
+    // setproducts(updatedproducts);
   };
 
   return (
@@ -138,36 +143,45 @@ const ProductTable = () => {
                 <Th>Description</Th>
                 <Th>Category</Th>
                 <Th>Quantity</Th>
+                <Th>Price</Th>
                 <Th>Brand</Th>
                 <Th>Ratings</Th>
-                <Th>Created At</Th>
                 <Th>Material</Th>
+                <Th>Created At</Th>
                 <Th>Edit Product</Th>
                 <Th>Delete Product</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {products.map(Product => (
-                <Tr key={Product.id}>
-                  <Td>{Product.id}</Td>
-                  <Td>{Product.title}</Td>
-                  <Td>{Product.id}</Td>
+              {products.map((Product, i) => (
+                <Tr key={Product._id}>
+                  <Td>{i + 1}</Td>
                   <Td>{Product.name}</Td>
-                  <Td>{Product.id}</Td>
-                  <Td>{Product.name}</Td>
-                  <Td>{Product.id}</Td>
-                  <Td>{Product.name}</Td>
-                  <Td>{Product.id}</Td>
+                  <Td>
+                    <Text children={Product.description} noOfLines={1} />
+                  </Td>
+                  <Td>{Product.category}</Td>
+                  <Td>{Product.quantity}</Td>
+                  <Td>{Product.price}</Td>
+                  <Td>{Product.brand}</Td>
+                  <Td>{Product.ratings}</Td>
+                  <Td>{Product.material}</Td>
+                  <Td>{Product.createdAt.split('T')[0]}</Td>
 
                   <Td>
-                    <Button variant={'outline'} textColor={'purple.400'}>
+                    <Button
+                      variant={'outline'}
+                      textColor={'purple.400'}
+                      onClick={onOpen}
+                    >
                       <Text>Edit Product</Text>
+                      <FullScreenModal isOpen={isOpen} onClose={onClose} />
                     </Button>
                   </Td>
                   <Td>
                     <Button
                       color={'purple.400'}
-                      onClick={() => handleDeleteProduct(Product.id)}
+                      onClick={() => handleDeleteProduct(Product._id)}
                     >
                       <RiDeleteBinLine />
                     </Button>

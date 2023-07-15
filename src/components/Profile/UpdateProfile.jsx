@@ -1,8 +1,9 @@
 import { Button, Container, Heading, Input, VStack } from '@chakra-ui/react'
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { SERVER_URL } from '../../App'
-import { toast } from 'react-hot-toast'
+import CookieFields from '../../context/utils'
+import { CartContext } from '../../context/store'
 import Cookies from 'js-cookie'
 const changeDetails=async(name,email,token)=>{
   const data = await axios.put(`${SERVER_URL}/updateprofile`,{name,email},{
@@ -14,20 +15,24 @@ const changeDetails=async(name,email,token)=>{
   })
   return data
 }
-const getToken=()=>{
-  const token =Cookies.get("token")
-  return token
-}
 function UpdateProfile() {
-
+const {loadingHandler,successHandler,ErrorHandler,storeUser}=useContext(CartContext)
     const [name,setName] = useState("")
     const [email,setEmail] = useState("")
     const submitHandler=(e)=>{
 
       e.preventDefault()
-      const token = getToken()
+      const token = CookieFields.getToken()
+
       if(token){
-      changeDetails(name,email,token).then(data=>toast.success(data.data.message)).catch(err=>toast.error(err.message||err.response.data.message))}
+        loadingHandler(true)
+      changeDetails(name,email,token).then(data=>{
+        Cookies.remove("user")
+        successHandler(data.data)
+        CookieFields.userInCookie(data.data.user)
+        storeUser(data.data.user)
+        
+      }).catch(err=>ErrorHandler(err))}
     }
   return (
     <Container py={'16'} minH={'95vh'}>

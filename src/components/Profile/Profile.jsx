@@ -1,43 +1,51 @@
 import { Avatar, Button, Container, HStack, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, VStack, useDisclosure } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { fileuploadStyle } from '../Auth/Register'
 import axios from 'axios'
 import { SERVER_URL } from '../../App'
-
+import CookieFields from '../../context/utils'
+import { CartContext } from '../../context/store'
 import Cookies from 'js-cookie'
-import { toast } from 'react-hot-toast'
 
 const changeProfileImage = async(formdata,token)=>{
-    const data =await axios.put(`${SERVER_URL}/updateprofilepicture`,formdata,{
+    const data = await axios.put(`${SERVER_URL}/updateprofilepicture`,formdata,{
         headers:{
-            "Content-Type":"application/json",
-            Authorization: `Bearer <${token}>`
-          },
-          withCredentials:true
-    })
-    return data
-}
+        "Content-Type":"multipart/form-data",
+        Authorization: `Bearer <${token}>`
+      },
+      withCredentials:true})
+      return data
+    }
 
-const getUser =()=>{
-    const user =Cookies.get("user")
-    return user
-}
+const getProfile=async(token)=>{
+    const data = await axios.get(`${SERVER_URL}/me`,{
+        headers:{
+        "Content-Type":"application/json",
+        Authorization: `Bearer <${token}>`
+      },
+      withCredentials:true
+    })
+      return data
+    }
 
 function Profile() {
-    const [user,setUser]=useState({})
-
-    useEffect(()=>{
-        const user=getUser()
-        if(user){
-            setUser(user)
-            setUser(JSON.parse(user))
-        }
-    },[])
-
+    const {storeUser,user,ErrorHandler,successHandler,loadingHandler} = useContext(CartContext)
     const changeImageSubmitHandler=({e,image})=>{
         e.preventDefault()
     }
+    useEffect(()=>{
+        const token = CookieFields.getToken()
+        console.log(typeof token)
+        loadingHandler(true)
+        getProfile(token).then(data=>{
+            // Cookies.remove("user")
+            // CookieFields.userInCookie(data.data.user)
+            console.log(user)
+            successHandler(data.data)
+            storeUser(data.data)        
+        }).catch(err=>ErrorHandler(err))
+    },[])
 
     const {isOpen,onClose , onOpen} =useDisclosure()
   return (
@@ -82,10 +90,7 @@ function Profile() {
 export default Profile
 
 function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}){
-    const getToken=()=>{
-        const token = Cookies.get("token")
-        return token
-    }
+    const {loadingHandler,successHandler,ErrorHandler,storeUser}=useContext(CartContext)
     const [image,setImage] = useState()
     const [imagePrev,setImagePrev] = useState()
     const changeImage=(e)=>{
@@ -98,15 +103,23 @@ function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}){
             setImage(file)
         }
     }
+
     const formdata=new FormData()
-    formdata.append("file",image)
-    
+    formdata.append("file",image)   
 
     const Closehandler=(e)=>{
-        const token = getToken()
+        const token = CookieFields.getToken()
         e.preventDefault();
         if(token){
-        changeProfileImage(image,token).then(data=>console.log(data)).catch(err=>{toast.error(err.response.data.message||err.message);console.log(err)})}
+        loadingHandler(true)
+        changeProfileImage(formdata,token).then((data)=>{
+            Cookies.remove("user")
+            successHandler(data.data);
+            if(!Cookies.get("user")){
+            CookieFields.userInCookie(data.data)}
+            storeUser(data.data.user)
+        }).catch(err=>ErrorHandler(err))}
+        
         onClose();
         setImage('')
         setImagePrev('')

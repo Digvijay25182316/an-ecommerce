@@ -4,8 +4,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { SERVER_URL } from '../../App'
 import { toast } from 'react-hot-toast'
-import Cookies from 'js-cookie'
 import { CartContext } from '../../context/store'
+import CookieFields from '../../context/utils'
 export const fileuploadStyle={
         cursor:"pointer",
         marginLeft:"-5%",
@@ -26,7 +26,7 @@ export const fileuploadStyle={
     }
 function Register() {
     const navigate =useNavigate()
-    const {storeUser} = useContext(CartContext)
+    const {storeUser,loadingHandler,successHandler,ErrorHandler} = useContext(CartContext)
     const [name,setName] = useState("")
     const [imagePrev,setImagePrev] = useState('')
     const [file,setFile] = useState('')
@@ -50,22 +50,23 @@ function Register() {
     }
     const handleRegister =(e)=>{
         e.preventDefault()      
-        if(password!==confirmpassword) {
-            toast.error(
-                "\"Confirm password and password\" fields does not match",
-                {
-                  duration: 3000,
-                }
-              );
-        }else{
-            
-        registerUser(formdata).then((data)=>{
-            toast.success(data.data.message)
-            Cookies.set('token', data.data.token, { expires: 7 }); // Expires in 7 days
-            Cookies.set('user',JSON.stringify(data.data.user), { expires: 7 }); // Expires in 7 days
-            storeUser(data.data)
+        if(password===confirmpassword) {
+            loadingHandler(password===confirmpassword)            
+        registerUser(formdata).then(({data})=>{
+            successHandler(data)
+            CookieFields.tokenInCookie(data.token)
+            CookieFields.userInCookie(data.user)
+            storeUser(data.user)
             navigate("/")
-        }).catch((err)=>toast.error(err.response.data.message))}
+        }).catch((err)=>ErrorHandler(err))
+        }else{
+        toast.error(
+            "\"Confirm password and password\" fields does not match",
+            {
+              duration: 3000,
+            }
+          );
+        }
     }
   return (
     <Container h={'100%'} my={"20px"}>
@@ -81,7 +82,7 @@ function Register() {
                 <Input required id='name' value={name} onChange={e=>setName(e.target.value)}
                 focusBorderColor='yellow.400'
                 placeholder='Enter your name'
-                type='text'
+                type='text' 
                 />
                 </Box>
                 <Box my={"4"}>
@@ -90,7 +91,7 @@ function Register() {
                 <Input required id='email' value={email} onChange={e=>setEmail(e.target.value)}
                 focusBorderColor='yellow.400'
                 placeholder='abc@gmail.com'
-                type='email'
+                type='email' 
                 />
                 </Box>
                 <Box my={"4"}>

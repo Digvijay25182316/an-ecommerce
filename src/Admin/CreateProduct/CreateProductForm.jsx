@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Box, Button, VStack,Input,FormLabel, SimpleGrid} from '@chakra-ui/react'
 import axios from 'axios'
 import { SERVER_URL } from '../../App'
-import { toast } from 'react-hot-toast'
-const fileuploadStyle={
+import { CartContext } from '../../context/store'
+export const fileuploadStyle={
     cursor:"pointer",
     marginLeft:"-5%",
     width:'110%',
@@ -14,7 +14,7 @@ const fileuploadStyle={
 }
 
 const createProduct =async(formdata,token)=>{
-    const data = await axios.post(`${SERVER_URL}/createproduct`,formdata,{headers:{
+    const data = await axios.post(`${SERVER_URL}/admin/createproduct`,formdata,{headers:{
         "Content-Type":"multipart/form-data",
         Authorization:`Bearer <${token}>`
     },
@@ -24,6 +24,7 @@ const createProduct =async(formdata,token)=>{
 }
 
 function CreateProductForm() {
+    const {loadingHandler,successHandler,ErrorHandler}=useContext(CartContext)
     const [name,setName] = useState("")
     const [price,setPrice] = useState("")
     const [description,setDescription] = useState("")
@@ -41,10 +42,10 @@ function CreateProductForm() {
     formdata.append("description",description)
     formdata.append("category",category)
     formdata.append("quantity",quantity)
-    formdata.append("features",features)
     formdata.append("brand",brand)
-    formdata.append("image",image)
     formdata.append("material",material)
+    formdata.append("features",features)
+    formdata.append("file",image)
 
     const changeImageHandler=(e)=>{
         const file=e.target.files[0];
@@ -57,8 +58,9 @@ function CreateProductForm() {
     }
 
     const handleSubmit =(e)=>{
+        loadingHandler(true)
         e.preventDefault()
-        createProduct(formdata).then(data=>console.log(data)).catch(err=>{toast.error(err.response.data.message||err.message);console.log(err)})
+        createProduct(formdata).then(data=>successHandler(data.data)).catch(err=>ErrorHandler(err))
     }
   return (
     <VStack h={"full"} justifyContent={'center'} spacing={'16'} alignItems={"center"}>

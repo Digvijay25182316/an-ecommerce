@@ -1,16 +1,29 @@
 import { Box, Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
-import {useEffect, useState } from "react";
+import axios from "axios";
+import {useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { SERVER_URL } from "../../App";
+import { CartContext } from "../../context/store";
 
+const getProductDetails=async(id)=>{
+  const data = await axios.get(`${SERVER_URL}/product/${id}`,{headers:{
+    "Content-Type":"application/json"
+  }})
+  return data
+}
 
 const ProductPage = () => {
+  const {successHandler,ErrorHandler,loadingHandler,addToCart}=useContext(CartContext)
   const [product,setProduct] =useState({})
   const {id} =useParams()
   useEffect(()=>{
-    fetch(`https://fakestoreapi.com/products/${id}`)
-            .then(res=>res.json())
-            .then(json=>{setProduct(json)}).catch(err=>console.error(err))
-  },[id])
+    loadingHandler(true);
+    getProductDetails(id).then(data=>{successHandler(data.data);setProduct(data.data.product)}).catch(err=>ErrorHandler(err))
+  },[])
+
+  const handleAddToCart=()=>{
+    addToCart(product)
+  }
 
   if(product){
   return (
@@ -25,7 +38,7 @@ const ProductPage = () => {
         <Text fontSize="2xl" fontWeight="bold" mt={4} color={"green.500"}>$ {product.price}</Text>
         </Box>
         <Box display={"flex"} flexDirection={"column"} ml={[0,"50px"]}>
-        <Button colorScheme="gray" mt={4} size="lg">Add to Cart</Button>
+        <Button colorScheme="gray" mt={4} size="lg" onClick={handleAddToCart}>Add to Cart</Button>
         <Button colorScheme="yellow" mt={4} size="lg">Buy Now</Button>
         </Box>
       </Box>

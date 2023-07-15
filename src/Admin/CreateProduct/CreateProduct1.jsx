@@ -1,14 +1,34 @@
 import { Box, Button, HStack, Stack, Text } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { BiSolidDashboard, BiSolidUser } from 'react-icons/bi'
 import { BsPlusCircleFill } from 'react-icons/bs'
 import { FaCartArrowDown } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import ProductTable from './ViewProduct'
 import CreateProductForm from './CreateProductForm'
+import axios from 'axios'
+import { SERVER_URL } from '../../App'
+import { CartContext } from '../../context/store'
+
+const getProducts =async()=>{
+  const data = await axios.get(`${SERVER_URL}/products`,{headers:{
+    "Content-Type":"application/json"
+  },withCredentials:true})
+  return data
+}
 
 function CreateProduct() {
+  const {loadingHandler,successHandler,ErrorHandler}=useContext(CartContext)
   const [isViewOn,setIsViewOff] = useState(false)
+  const [product,setProduct] = useState([])
+
+  useEffect(() => {
+    loadingHandler(true)
+    getProducts().then(({ data }) => {
+      setProduct(data.products);
+      successHandler(data)
+    }).catch(err=>ErrorHandler(err));
+  },[]);
   return (
     <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
       <HStack m={'20px'}>
@@ -95,7 +115,7 @@ function CreateProduct() {
           width={'90vw'}
           textAlign={'center'}
         >
-          <ProductTable/>
+          <ProductTable productArray={product}/>
         </Stack>)}
       </Box>
     </Box>

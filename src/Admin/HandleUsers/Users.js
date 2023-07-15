@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Table,
   Thead,
@@ -12,6 +12,7 @@ import {
   Text,
   useDisclosure,
   HStack,
+  Heading,
 } from '@chakra-ui/react';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import FullScreenModal from './FullScreenModal';
@@ -19,6 +20,11 @@ import { BiSolidDashboard, BiSolidUser } from 'react-icons/bi';
 import { BsPlusCircleFill } from 'react-icons/bs';
 import { FaCartArrowDown } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { SERVER_URL } from '../../App';
+import CookeiFields from '../../context/utils.js';
+import { toast } from 'react-hot-toast';
+import { CartContext } from '../../context/store';
 const cartItems = [
   {
     id: 1,
@@ -121,19 +127,33 @@ const cartItems = [
   },
 ];
 
+const getUsers = async token => {
+  const data = await axios.get(`${SERVER_URL}/users`, {
+    headers: {
+      Authorization: `Bearer <${token}>`,
+    },
+    withCredentials: true,
+  });
+  return data;
+};
+
 function Users() {
-  const [users, setUser] = useState(cartItems);
+  const { loadingHandler, successHandler, ErrorHandler } =
+    useContext(CartContext);
+  const token = CookeiFields.getToken();
+  const [users, setUsers] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleCreateuser = () => {
-    const newProduct = { id: users.length + 1, name: 'New Product' };
-    setUser([...users, newProduct]);
-  };
+  useEffect(() => {
+    if (token) {
+      loadingHandler(true);
+      getUsers(token)
+        .then(({ data }) => successHandler(data.users))
+        .catch(err => ErrorHandler(err));
+    }
+  }, []);
 
-  const handleDeleteuser = id => {
-    const updatedusers = users.filter(Product => Product.id !== id);
-    setUser(updatedusers);
-  };
+  const handleDeleteuser = id => {};
   return (
     <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
       <HStack m={'20px'}>
@@ -224,38 +244,42 @@ function Users() {
                 <Th>Delete</Th>
               </Tr>
             </Thead>
-            <Tbody>
-              {users.map(user => (
-                <Tr key={user.id}>
-                  <Td>{user.id}</Td>
-                  <Td>{user.title}</Td>
-                  <Td>{user.id}</Td>
-                  <Td>{user.name}</Td>
-                  <Td>{user.id}</Td>
-                  <Td>{user.name}</Td>
-                  <Td>{user.id}</Td>
-                  <Td>{user.name}</Td>
-                  <Td>
-                    <Button
-                      variant={'outline'}
-                      textColor={'purple.400'}
-                      onClick={onOpen}
-                    >
-                      <Text>Edit user</Text>
-                      <FullScreenModal isOpen={isOpen} onClose={onClose} />
-                    </Button>
-                  </Td>
-                  <Td>
-                    <Button
-                      color={'purple.400'}
-                      onClick={() => handleDeleteuser(user.id)}
-                    >
-                      <RiDeleteBinLine />
-                    </Button>
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
+            {users ? (
+              users.map(user => (
+                <Tbody>
+                  <Tr key={user._id} id={user.id}>
+                    <Td>{user._id}</Td>
+                    <Td>{user.name}</Td>
+                    <Td>{user.email}</Td>
+                    <Td>{user.paymentHistory}</Td>
+                    <Td>{user.orderHistory}</Td>
+                    <Td>{user.currentOrders}</Td>
+                    <Td>{user.createdAt.split('T')[0]}</Td>
+                    <Td>{user.role}</Td>
+                    <Td>
+                      <Button
+                        variant={'outline'}
+                        textColor={'purple.400'}
+                        onClick={onOpen}
+                      >
+                        <Text>Edit user</Text>
+                        <FullScreenModal isOpen={isOpen} onClose={onClose} />
+                      </Button>
+                    </Td>
+                    <Td>
+                      <Button
+                        color={'purple.400'}
+                        onClick={() => handleDeleteuser(user.id)}
+                      >
+                        <RiDeleteBinLine />
+                      </Button>
+                    </Td>
+                  </Tr>
+                </Tbody>
+              ))
+            ) : (
+              <Text children="There Is No User To show" />
+            )}
           </Table>
         </Stack>
       </Box>

@@ -96,6 +96,7 @@ function Cart() {
     }
   ]
   ;
+  
 const [products,setProduct]  =useState(cartItems)
 
   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);

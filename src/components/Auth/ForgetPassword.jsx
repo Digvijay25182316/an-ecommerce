@@ -1,8 +1,8 @@
-import React, {useState } from 'react';
+import React, {useContext, useState } from 'react';
 import { Box, Button, FormControl, FormLabel, Input, Heading } from '@chakra-ui/react'
 import axios from 'axios';
 import { SERVER_URL } from '../../App';
-import { toast } from 'react-hot-toast';
+import { CartContext } from '../../context/store';
 
 const forgetPassword = async(email)=>{
   const data = await axios.post(`${SERVER_URL}/forgetpassword`,{email},{
@@ -12,11 +12,12 @@ const forgetPassword = async(email)=>{
 }
 
 function ForgetPassword() {
-  
-    const [email,setEmail] =useState("")
+  const {loadingHandler,successHandler,ErrorHandler}=useContext(CartContext)
+  const [email,setEmail] =useState("")
   const handleSubmit = (event) => {
+    loadingHandler(true)
     event.preventDefault();
-      forgetPassword(email).then((data)=>toast.success(data.data.message)).catch(err=>{toast.error(err.response.data.message)})
+      forgetPassword(email).then((data)=>successHandler(data.data)).catch(err=>ErrorHandler(err))
     // Perform password reset logic here
   };
 

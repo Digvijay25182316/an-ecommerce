@@ -4,8 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from "axios";
 import { SERVER_URL } from '../../App'
 import { CartContext } from '../../context/store';
-import Cookies from 'js-cookie';
-import { toast } from 'react-hot-toast';
+import CookieFields from "../../context/utils"
 
 const loginuser = async(email,password)=>{
     const data = await axios.post(`${SERVER_URL}/login`,{email,password},{
@@ -21,17 +20,19 @@ function LoginPage() {
     const navigate = useNavigate()
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
-    const {storeUser} = useContext(CartContext)
+    const {storeUser,loadingHandler,ErrorHandler,successHandler} = useContext(CartContext)
     const handleLogin=(event)=>{
+        loadingHandler(true)
         event.preventDefault()
         loginuser(email,password).then(({data})=>{
-            Cookies.set('token', data.token, { expires: 7 }); // Expires in 7 days
-            Cookies.set('user',JSON.stringify(data.user), { expires: 7 }); // Expires in 7 days
-            toast.success(data.message)
+            console.log(data.token)
+            CookieFields.tokenInCookie(data.token)
+            CookieFields.userInCookie(data.user)       
+            successHandler(data)
             storeUser(data.user)
             navigate("/")
         }
-        ).catch(err=>console.log(err))
+        ).catch(err=>ErrorHandler(err))
     }       
   return (
     <Container h={'95vh'}>

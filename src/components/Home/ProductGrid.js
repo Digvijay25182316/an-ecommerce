@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Box,
   SimpleGrid,
@@ -10,8 +10,10 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import RatingComponent from '../Products/RatingComponent';
+import { CartContext } from '../../context/store';
 
 const ProductGrid = ({ products, onPageChange }) => {
+  const { loadingHandler } = useContext(CartContext);
   const [currentPage, setCurrentPage] = useState(1);
   // const [products, setProducts] = useState([]);
   const [productsPerPage, setProductsPerPage] = useState(30);
@@ -29,9 +31,6 @@ const ProductGrid = ({ products, onPageChange }) => {
     startIndex + productsPerPage
   );
 
-  const AddToCartHandler = () => {};
-  const BuyNowHandler = () => {};
-
   return (
     <Box
       display={'flex'}
@@ -44,8 +43,12 @@ const ProductGrid = ({ products, onPageChange }) => {
     >
       <SimpleGrid columns={[1, 2, 3, 4, 5]} spacing={6}>
         {visibleProducts &&
-          visibleProducts.map((product, id) => (
-            <Link to={`/product/${product.id}`} key={product._id}>
+          visibleProducts.map(product => (
+            <Link
+              to={`/product/${product._id}`}
+              key={product._id}
+              onClick={() => loadingHandler(true)}
+            >
               <Box
                 id={product._id}
                 key={product._id}
@@ -67,7 +70,7 @@ const ProductGrid = ({ products, onPageChange }) => {
                   alignItems={'center'}
                 >
                   <Image
-                    src={product.image}
+                    src={product.poster.url}
                     alt={product.name}
                     height="200px"
                     objectFit="cover"

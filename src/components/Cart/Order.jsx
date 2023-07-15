@@ -25,17 +25,9 @@ function OrderPage() {
   };
 
   return (
-    <Box maxWidth="600px" mx="auto" p={4}>
+    <Box maxWidth="600px" mx="auto" p={4} minHeight={"80vh"}>
         <Heading children="Place Order" color={'#4f4c4c'} textAlign={"center"} my={"30px"}/>
       <Stack spacing={4}>
-        <FormControl>
-          <FormLabel>Full Name</FormLabel>
-          <Input placeholder="John Doe" focusBorderColor='yellow.400' />
-        </FormControl>
-        <FormControl>
-          <FormLabel>Email Address</FormLabel>
-          <Input type="email" placeholder="john.doe@example.com" focusBorderColor='yellow.400'/>
-        </FormControl>
         <FormControl>
           <FormLabel>Shipping Address</FormLabel>
           <Input placeholder="123 Main St" focusBorderColor='yellow.400'/>

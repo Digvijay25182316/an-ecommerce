@@ -4,21 +4,20 @@ import {RxHamburgerMenu}  from "react-icons/rx"
 import {BsCart2,BsCartCheckFill}  from "react-icons/bs"
 import {AiOutlineSearch}  from "react-icons/ai"
 import {ColorModeSwitcher} from "../../ColorModeSwitcher"
-import { Link, useLocation} from 'react-router-dom'
+import { Link, useLocation, useNavigate} from 'react-router-dom'
 import OverlayMenu from './OverlayMenu'
 import {FcSettings} from "react-icons/fc"
 import { CartContext } from '../../context/store'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 import { SERVER_URL } from '../../App'
-import { toast } from 'react-hot-toast'
   const logoutfunc=async()=>{
     const response = await axios.get(`${SERVER_URL}/logout`)
     return response
   }
 function Header() {  
-  
-  const {user,isAuthenticated,isAdmin,loggedout}=useContext(CartContext)
+  const navigate=useNavigate()  
+  const {user,isAuthenticated,isAdmin,loggedout,successHandler,ErrorHandler}=useContext(CartContext)
   const location = useLocation()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isSearch,setIsSearch] = useState(false)
@@ -28,7 +27,7 @@ function Header() {
   const logoutHandler=()=>{
     Cookies.remove("user")
     Cookies.remove("token")
-    logoutfunc().then(data=>{toast.success(data.data.message);loggedout()}).catch(err=>toast.error(err.response.message))
+    logoutfunc().then(data=>{successHandler(data.data);loggedout();navigate("/login")}).catch(err=>ErrorHandler(err))
   }
   const isAdminRoute = location.pathname.startsWith("/admin");
   return (
@@ -49,7 +48,7 @@ function Header() {
           <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader bg={"yellow.400"} textAlign={"center"}>Hi! {user.name}</ModalHeader>
+          <ModalHeader bg={"yellow.400"} textAlign={"center"}>Hi! {user&&user.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody >
             <Stack height={"60vh"}>

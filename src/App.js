@@ -22,9 +22,10 @@ import ResetPassword from './components/Auth/ResetPassword';
 import ConfirmOrder from './components/Cart/ConfirmOrder';
 import CreateProduct from './Admin/CreateProduct/CreateProduct1';
 import { Toaster } from 'react-hot-toast';
-export const SERVER_URL =
-  process.env.REACT_APP_SERVER_URL ||
-  'https://an-ecommerce-backend.onrender.com/api/v1';
+import Loading from './components/MainComponents/Loading';
+export const SERVER_URL = 'http://localhost:4000/api/v1';
+// process.env.REACT_APP_SERVER_URL ||
+// 'https://an-ecommerce-backend.onrender.com/api/v1';
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
           </Routes>
           <Footer />
           <Toaster position="top-center" reverseOrder={false} />
+          <Loading />
         </Router>
       </ChakraProvider>
     </ContextProvider>

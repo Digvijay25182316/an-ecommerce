@@ -1,9 +1,10 @@
 import { Box, Button, Container, FormLabel, Heading, Input, VStack } from '@chakra-ui/react'
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { SERVER_URL } from '../../App'
 import { useNavigate, useParams } from 'react-router-dom'
+import { CartContext } from '../../context/store'
 
 const resetPassword=async(token,password)=>{
   const data = await axios.put(`${SERVER_URL}/resetpassword/${token}`,{password},{
@@ -13,6 +14,7 @@ const resetPassword=async(token,password)=>{
 }
 
 function ResetPassword() {
+  const {loadingHandler,successHandler,ErrorHandler}=useContext(CartContext)
   const navigate=useNavigate()
   const {token }=useParams()
     const [password,setPassword] = useState("")
@@ -22,10 +24,11 @@ function ResetPassword() {
       if(password!==newPassword){
         toast.error("\"password and new Password\" Fields are not matching")
       }else{
+        loadingHandler(true)
         resetPassword(token,password).then(data=>{
-          toast.success(data.data.message)
+          successHandler(data.data)
           navigate("/")
-        }).catch(err=>toast.error(err.response.data.message||err.message))
+        }).catch(err=>ErrorHandler(err))
       }
     }
   return (

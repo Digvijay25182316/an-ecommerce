@@ -40,14 +40,6 @@ const OverlayMenu = ({onClose,isAdmin}) => {
             </Button>
           </Link>
         </Stack>
-        <Stack direction="row" align="center">
-        <Link to="/myprofile">
-            <Button gap={'20px'} onClick={onClose} colorScheme="yellow" w={"full"}>
-                <Text children="Gift Someone"/>
-            </Button>
-          </Link>
-        </Stack>
-
         </Box>
       </VStack>
     </Box>
