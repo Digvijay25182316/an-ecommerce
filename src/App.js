@@ -26,7 +26,7 @@ import Loading from './components/MainComponents/Loading';
 
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 // 'https://an-ecommerce-backend.onrender.com/api/v1';
-('http://localhost:4000/api/v1');
+// ('http://localhost:4000/api/v1');
 
 function App() {
   return (
