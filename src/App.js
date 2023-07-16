@@ -22,41 +22,44 @@ import ConfirmOrder from './components/Cart/ConfirmOrder';
 import CreateProduct from './Admin/CreateProduct/CreateProduct1';
 import { Toaster } from 'react-hot-toast';
 import Loading from './components/MainComponents/Loading';
+import { ContextProvider } from './context/store';
 
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 function App() {
   return (
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/order" element={<OrderPage />} />
-        <Route path="/confirmorder" element={<ConfirmOrder />} />
-        {/* Auth pages */}
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgetpassword" element={<ForgetPassword />} />
-        <Route path="/resetpassword/:token" element={<ResetPassword />} />
-        {/* products */}
-        <Route path="/product/:id" element={<Products />} />
-        {/* profile */}
-        <Route path="/myprofile" element={<Profile />} />
-        <Route path="/changepassword" element={<ChangePassword />} />
-        <Route path="/updateprofile" element={<UpdateProfile />} />
+    <ContextProvider>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/order" element={<OrderPage />} />
+          <Route path="/confirmorder" element={<ConfirmOrder />} />
+          {/* Auth pages */}
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgetpassword" element={<ForgetPassword />} />
+          <Route path="/resetpassword/:token" element={<ResetPassword />} />
+          {/* products */}
+          <Route path="/product/:id" element={<Products />} />
+          {/* profile */}
+          <Route path="/myprofile" element={<Profile />} />
+          <Route path="/changepassword" element={<ChangePassword />} />
+          <Route path="/updateprofile" element={<UpdateProfile />} />
 
-        {/* Admin Routes */}
-        <Route path="/admin/product" element={<CreateProduct />} />
-        <Route path="/admin/users" element={<Users />} />
-        <Route path="/admin/dashboard" element={<DashBoard />} />
-        <Route path="/admin/orders" element={<Orders />} />
-      </Routes>
-      <Footer />
-      <Toaster position="top-center" reverseOrder={false} />
-      <Loading />
-    </Router>
+          {/* Admin Routes */}
+          <Route path="/admin/product" element={<CreateProduct />} />
+          <Route path="/admin/users" element={<Users />} />
+          <Route path="/admin/dashboard" element={<DashBoard />} />
+          <Route path="/admin/orders" element={<Orders />} />
+        </Routes>
+        <Footer />
+        <Toaster position="top-center" reverseOrder={false} />
+        <Loading />
+      </Router>
+    </ContextProvider>
   );
 }
 
