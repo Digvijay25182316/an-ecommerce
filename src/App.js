@@ -3,7 +3,7 @@ import { ChakraProvider, theme } from '@chakra-ui/react';
 import Header from './components/Header/Header';
 import Home from './components/Home/Home';
 import Footer from './components/Footer/Footer';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Cart from './components/Cart/Cart';
 import CheckoutPage from './components/Cart/Checkout';
 import OrderPage from './components/Cart/Order';
@@ -28,9 +28,9 @@ export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 function App() {
   return (
-    <ContextProvider>
+    <Router>
       <ChakraProvider theme={theme}>
-        <BrowserRouter>
+        <ContextProvider>
           <Header />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -59,9 +59,9 @@ function App() {
           <Footer />
           <Toaster position="top-center" reverseOrder={false} />
           <Loading />
-        </BrowserRouter>
+        </ContextProvider>
       </ChakraProvider>
-    </ContextProvider>
+    </Router>
   );
 }
 
