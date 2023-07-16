@@ -17,12 +17,20 @@ import {
 import RatingComponent from '../../components/Products/RatingComponent';
 import { fileuploadStyle } from './CreateProductForm';
 
-const FullScreenModal = ({ isOpen, onClose }) => {
-  const [name, setName] = useState('');
-  const [Prevewimage, setPreviewImage] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [Stock, setStock] = useState('');
+const FullScreenModal = ({
+  isOpen,
+  onClose,
+  prename,
+  predescription,
+  preprice,
+  prestock,
+  preimage,
+}) => {
+  const [name, setName] = useState(prename);
+  const [Prevewimage, setPreviewImage] = useState(preimage);
+  const [description, setDescription] = useState(predescription);
+  const [price, setPrice] = useState(preprice);
+  const [Stock, setStock] = useState(prestock);
 
   const handleImageUpload = event => {
     const file = event.target.files[0];
@@ -118,6 +126,7 @@ const FullScreenModal = ({ isOpen, onClose }) => {
             </VStack>
             <VStack
               width={['90vw', '50vw']}
+              display={['none', 'flex']}
               alignItems={'center'}
               justifyContent={'center'}
             >

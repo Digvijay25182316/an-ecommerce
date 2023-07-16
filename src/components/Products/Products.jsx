@@ -15,10 +15,16 @@ const getProductDetails=async(id)=>{
 const ProductPage = () => {
   const {successHandler,ErrorHandler,loadingHandler,addToCart}=useContext(CartContext)
   const [product,setProduct] =useState({})
+  const [image,setImage]=useState("")
+  console.log(product)
   const {id} =useParams()
   useEffect(()=>{
     loadingHandler(true);
-    getProductDetails(id).then(data=>{successHandler(data.data);setProduct(data.data.product)}).catch(err=>ErrorHandler(err))
+    getProductDetails(id).then(data=>{
+      successHandler(data.data);
+      setProduct(data.data.product)
+      setImage(data.data.product.poster.url)
+    }).catch(err=>ErrorHandler(err))
   },[])
 
   const handleAddToCart=()=>{
@@ -30,11 +36,11 @@ const ProductPage = () => {
     <Box maxW={"90vw"} p={8} gap={["10px","20px"]} display={"flex"} flexDirection={"column"} alignItems={"center"} key={id}>
     <Flex align="center"direction={["column","row"]}>
       <Box>
-      <Image src={product.image} alt="Product" borderRadius="md" w={[400,400]}/>
+      <Image src={image?image:product.image} alt="Product" borderRadius="md" w={[400,400]}/>
       </Box>
       <Box ml={8} display={"flex"} gap={["10px","50px"]} flexDirection={["column","row"]} alignItems={"center"}>
         <Box maxW={"200px"}>
-        <Heading fontSize="3xl" fontWeight="bold">{product.title}</Heading>
+        <Heading fontSize="3xl" fontWeight="bold">{product.name}</Heading>
         <Text fontSize="2xl" fontWeight="bold" mt={4} color={"green.500"}>$ {product.price}</Text>
         </Box>
         <Box display={"flex"} flexDirection={"column"} ml={[0,"50px"]}>

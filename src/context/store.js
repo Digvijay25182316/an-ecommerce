@@ -2,7 +2,7 @@
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import CookieFields from './utils';
 
 // Create a new context
@@ -39,12 +39,15 @@ const ContextProvider = ({ children }) => {
         setIsAdmin(false);
       }
     }
+    if (isSuccess || isError) {
+      setIsLoading(false);
+    }
     setCartItem(CookieFields.getCartItem());
     // Clean up the interceptor on component unmount
     return () => {
       axios.interceptors.request.eject(requestInterceptor);
     };
-  }, []);
+  }, [isError, isSuccess]);
   const addToCart = item => {
     const products = CookieFields.getProducts();
     if (!products) {
