@@ -1,106 +1,102 @@
 import { Box, Button,  Flex, HStack, Heading, Image,  Tag, Text, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {AiFillDelete} from "react-icons/ai"
 import { Link } from "react-router-dom";
+import CookieFields from "../../context/utils";
 
 function Cart() {
   // Example data for cart items
-  const cartItems = [
+  const cartItem = [
     {
       "id": 1,
-      "image": "https://example.com/images/bluetooth_speaker.jpg",
-      "title": "Premium Portable Bluetooth Speaker",
+      "poster": "https://example.com/images/bluetooth_speaker.jpg",
+      "name": "Premium Portable Bluetooth Speaker",
       "price": 49.99,
-      "quantity": 50,
-      "description": "Enjoy high-quality sound on the go with our premium portable Bluetooth speaker. With advanced Bluetooth technology, this speaker delivers rich and powerful audio. It's perfect for parties, outdoor adventures, or simply relaxing at home. Get yours today and experience music like never before."
+      "quantity": 50
     },
     {
       "id": 2,
-      "image": "https://example.com/images/fitness_tracker.jpg",
-      "title": "Smart Fitness Tracker",
+      "poster": "https://example.com/images/fitness_tracker.jpg",
+      "name": "Smart Fitness Tracker",
       "price": 79.99,
-      "quantity": 100,
-      "description": "Stay motivated and track your progress with our smart fitness tracker. This sleek device monitors your heart rate, counts steps, and tracks your sleep patterns. It also connects to your smartphone to receive notifications and control music playback. Start your fitness journey with our reliable and stylish tracker."
+      "quantity": 100
     },
     {
       "id": 3,
-      "image": "https://example.com/images/wireless_earbuds.jpg",
-      "title": "True Wireless Earbuds",
+      "poster": "https://example.com/images/wireless_earbuds.jpg",
+      "name": "True Wireless Earbuds",
       "price": 99.99,
-      "quantity": 200,
-      "description": "Experience true freedom with our wireless earbuds. These earbuds provide exceptional sound quality and a comfortable fit. With the latest Bluetooth technology, they offer a seamless connection to your devices. The charging case ensures extended playtime on the go. Enjoy your favorite music or take calls without any wires holding you back."
+      "quantity": 200
     },
     {
       "id": 4,
-      "image": "https://example.com/images/digital_camera.jpg",
-      "title": "Digital Camera",
+      "poster": "https://example.com/images/digital_camera.jpg",
+      "name": "Digital Camera",
       "price": 199.99,
-      "quantity": 30,
-      "description": "Capture life's precious moments with our high-quality digital camera. With advanced features and a user-friendly interface, this camera allows you to take stunning photos and videos. Whether you're a professional photographer or an enthusiastic beginner, our digital camera is the perfect companion for any occasion."
+      "quantity": 30
     },
     {
       "id": 5,
-      "image": "https://example.com/images/wireless_headphones.jpg",
-      "title": "Wireless Headphones",
+      "poster": "https://example.com/images/wireless_headphones.jpg",
+      "name": "Wireless Headphones",
       "price": 129.99,
-      "quantity": 150,
-      "description": "Immerse yourself in music with our wireless headphones. These headphones offer superior sound quality and a comfortable over-ear design. With Bluetooth connectivity and a long battery life, you can enjoy your favorite tunes without any distractions. Say goodbye to tangled wires and hello to an elevated audio experience."
+      "quantity": 150
     },
     {
       "id": 6,
-      "image": "https://example.com/images/smart_watch.jpg",
-      "title": "Smart Watch",
+      "poster": "https://example.com/images/smart_watch.jpg",
+      "name": "Smart Watch",
       "price": 149.99,
-      "quantity": 80,
-      "description": "Stay connected and track your fitness with our smartwatch. This stylish device features a vibrant touchscreen display, fitness tracking capabilities, and smartphone integration. Receive notifications, monitor your heart rate, and track your daily activity with ease. Enhance your lifestyle with our feature-packed smartwatch."
+      "quantity": 80
     },
     {
       "id": 7,
-      "image": "https://example.com/images/portable_charger.jpg",
-      "title": "Portable Charger",
+      "poster": "https://example.com/images/portable_charger.jpg",
+      "name": "Portable Charger",
       "price": 39.99,
-      "quantity": 250,
-      "description": "Never run out of battery again with our portable charger. This compact and lightweight charger provides a high-capacity power bank that can charge your devices multiple times on a single charge. It's perfect for travel, outdoor activities, or emergencies. Stay powered up wherever you go."
+      "quantity": 250
     },
     {
       "id": 8,
-      "image": "https://example.com/images/wireless_keyboard.jpg",
-      "title": "Wireless Keyboard",
+      "poster": "https://example.com/images/wireless_keyboard.jpg",
+      "name": "Wireless Keyboard",
       "price": 59.99,
-      "quantity": 120,
-      "description": "Experience the convenience of a wireless keyboard. Our ergonomic keyboard offers a comfortable typing experience without the hassle of wires. With a reliable wireless connection and long battery life, you can work or play with ease. Enhance your productivity and eliminate clutter on your desk."
+      "quantity": 120
     },
     {
       "id": 9,
-      "image": "https://example.com/images/virtual_reality_headset.jpg",
-      "title": "Virtual Reality Headset",
+      "poster": "https://example.com/images/virtual_reality_headset.jpg",
+      "name": "Virtual Reality Headset",
       "price": 299.99,
-      "quantity": 20,
-      "description": "Step into a new world of immersive entertainment with our virtual reality headset. Dive into 3D games, virtual tours, or watch movies in a whole new way. With adjustable straps and a comfortable design, our VR headset provides a thrilling and comfortable experience for hours of virtual exploration."
+      "quantity": 20
     },
     {
       "id": 10,
-      "image": "https://example.com/images/smart_plug.jpg",
-      "title": "Smart Plug",
+      "poster": "https://example.com/images/smart_plug.jpg",
+      "name": "Smart Plug",
       "price": 24.99,
-      "quantity": 300,
-      "description": "Control your devices with a simple voice command using our smart plug. This Wi-Fi-enabled plug allows you to turn on or off your appliances remotely using your smartphone or voice assistant. Set schedules, monitor energy usage, and make your home smarter and more efficient."
+      "quantity": 300
     },
     {
       "id": 11,
-      "image": "https://example.com/images/wireless_mouse.jpg",
-      "title": "Wireless Mouse",
+      "poster": "https://example.com/images/wireless_mouse.jpg",
+      "name": "Wireless Mouse",
       "price": 29.99,
-      "quantity": 200,
-      "description": "Experience freedom and convenience with our wireless mouse. Say goodbye to tangled cords and enjoy precise tracking and ergonomic design. With a reliable wireless connection, this mouse allows you to work or play with ease. Boost your productivity and make computing effortless."
+      "quantity": 200
     }
   ]
   ;
   
-const [products,setProduct]  =useState(cartItems)
+    const [products,setProduct]  =useState([])
+    useEffect(() => {
+      const cartItems = CookieFields.getCartItem();
+      if (cartItems) {
+        setProduct(cartItems);
+      }
+    }, []);
 
-  const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  const qtytotal = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const subtotal = products.reduce((total, item) => total + item.price * item.quantity, 0);
+  const qtytotal = products.reduce((total, item) => total + item.quantity, 0);
 
   const handleDeletecartItem = id => {
     const updatedUsers = products.filter(user => user.id !== id);
@@ -110,7 +106,7 @@ const [products,setProduct]  =useState(cartItems)
   return (
     <Box maxWidth="600px" mx="auto" p={4} minHeight={["60vh","80vh"]} my={"30px"} display="flex" flexDirection={"column"} alignItems={"center"} gap={"30px"}>
       <Heading children="Shopping Cart" color={'#4f4c4c'}/>
-      {products?products.map((item)=>(
+      {products&&products.map((item)=>(
         <VStack key={item.id}>
           <HStack
           w={["90vw","70vw"]} // Adjust the width as per your preference
@@ -126,11 +122,11 @@ const [products,setProduct]  =useState(cartItems)
           >
             <HStack gap={["20px","100px"]}>
           <Box>
-            <Image src={item.image} alt={"image"} height="23px" width={"25px"}/>
+            <Image src={item.poster} alt={"poster"} height="90px" objectFit={"contain"}/>
           </Box>
           <Box display={"flex"} flexDirection={"column"} gap={"20px"}>
-            <Text children={item.title} fontSize="lg" fontWeight="semibold"/>
-            <Text children= {`$ ${item.price}`} fontSize="lg" fontWeight="bold" color="green.500"/>
+            <Text children={item.name} fontSize="lg" fontWeight="semibold"/>
+            <Text children={`$ ${item.price}`} fontSize="lg" fontWeight="bold" color="green.500"/>
           </Box>
           </HStack>
           <HStack gap={["10px","100px"]} justifyContent={"center"}>
@@ -148,9 +144,7 @@ const [products,setProduct]  =useState(cartItems)
           </HStack>
           </HStack>
         </VStack>
-      )) : (
-        <Text>Your cart is empty.</Text>
-      )}
+      ))}
       <Box width={["90vw","60vw"]} boxShadow={"lg"} border={"0.2px solid lightgray"} rounded={"lg"} display={"flex"} flexDirection={"column"} alignItems={"center"}>
         <Text children="Go To Checkout" textAlign={"center"} mb={"10px"} fontWeight={"bold"} bg={"yellow.400"} p={"10px"} width={"full"} rounded={"lg"}/>
         <Box display={"flex"} flexDirection={["column","row"]} gap={"30px"} alignItems={["left","center"]} py={["20px",'40px']} justifyContent={["center","space-evenly"]}>

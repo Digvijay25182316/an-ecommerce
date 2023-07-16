@@ -27,7 +27,8 @@ function LoginPage() {
         loginuser(email,password).then(({data})=>{
             console.log(data.token)
             CookieFields.tokenInCookie(data.token)
-            CookieFields.userInCookie(data.user)       
+            CookieFields.userInCookie(data.user)
+            console.log(data)       
             successHandler(data)
             storeUser(data.user)
             navigate("/")

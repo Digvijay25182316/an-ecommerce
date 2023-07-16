@@ -18,7 +18,6 @@ const ContextProvider = ({ children }) => {
   const [isloading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
-  console.log(cartItem);
 
   useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use(config => {
@@ -50,7 +49,13 @@ const ContextProvider = ({ children }) => {
     const products = CookieFields.getProducts();
     if (!products) {
       const newProducts = [];
-      newProducts.push({ id: item._id, quantity: 1 });
+      newProducts.push({
+        id: item._id,
+        name: item.name,
+        poster: item.poster.url,
+        price: item.price,
+        quantity: 1,
+      });
       const serializedArray = JSON.stringify(newProducts);
       // Set the cookie with the serialized array
       try {
@@ -74,7 +79,13 @@ const ContextProvider = ({ children }) => {
 
       if (!itemExists) {
         // Add the item to the cart with quantity 1
-        parsedProducts.push({ id: item._id, quantity: 1 });
+        parsedProducts.push({
+          id: item._id,
+          name: item.name,
+          poster: item.poster.url,
+          price: item.price,
+          quantity: 1,
+        });
       }
 
       const serializedArray = JSON.stringify(parsedProducts);

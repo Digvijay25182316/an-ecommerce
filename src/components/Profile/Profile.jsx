@@ -21,7 +21,6 @@ const changeProfileImage = async(formdata,token)=>{
 const getProfile=async(token)=>{
     const data = await axios.get(`${SERVER_URL}/me`,{
         headers:{
-        "Content-Type":"application/json",
         Authorization: `Bearer <${token}>`
       },
       withCredentials:true
@@ -30,7 +29,9 @@ const getProfile=async(token)=>{
     }
 
 function Profile() {
-    const {storeUser,user,ErrorHandler,successHandler,loadingHandler} = useContext(CartContext)
+    const [user,setUser]=useState({})
+    const {ErrorHandler,successHandler,loadingHandler} = useContext(CartContext)
+
     const changeImageSubmitHandler=({e,image})=>{
         e.preventDefault()
     }
@@ -38,11 +39,8 @@ function Profile() {
         const token = CookieFields.getToken()
         loadingHandler(true)
         getProfile(token).then(data=>{
-            // Cookies.remove("user")
-            // CookieFields.userInCookie(data.data.user)
-            console.log(user)
-            successHandler(data.data)
-            storeUser(data.data)        
+            setUser(data.data.user)
+            successHandler(data.data)        
         }).catch(err=>ErrorHandler(err))
     },[])
 

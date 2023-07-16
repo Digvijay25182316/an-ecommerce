@@ -10,7 +10,7 @@ const getToken = () => {
 
 const tokenInCookie = data => {
   if (data) {
-    Cookies.set('token', JSON.stringify(data), { expires: 7 });
+    Cookies.set('token', data, { expires: 7 });
   } // Expires in 7 days
 };
 
