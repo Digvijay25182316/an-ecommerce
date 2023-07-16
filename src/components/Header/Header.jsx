@@ -11,6 +11,7 @@ import { CartContext } from '../../context/store'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 import { SERVER_URL } from '../../App'
+
   const logoutfunc=async()=>{
     const response = await axios.get(`${SERVER_URL}/logout`)
     return response
@@ -30,6 +31,7 @@ function Header() {
     logoutfunc().then(data=>{successHandler(data.data);loggedout();navigate("/login")}).catch(err=>ErrorHandler(err))
   }
   const isAdminRoute = location.pathname.startsWith("/admin");
+
   return (
     <Stack flexDirection={'row'} alignItems={"center"} justifyContent={"center"}>
       <VStack>        
