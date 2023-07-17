@@ -22,6 +22,7 @@ import ConfirmOrder from './components/Cart/ConfirmOrder';
 import CreateProduct from './Admin/CreateProduct/CreateProduct1';
 import { Toaster } from 'react-hot-toast';
 import Loading from './components/MainComponents/Loading';
+import NotFound from './components/NotFound/NotFound';
 
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -52,6 +53,7 @@ function App() {
         <Route path="/admin/users" element={<Users />} />
         <Route path="/admin/dashboard" element={<DashBoard />} />
         <Route path="/admin/orders" element={<Orders />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
       <Toaster position="top-center" reverseOrder={false} />
