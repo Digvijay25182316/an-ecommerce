@@ -76,7 +76,7 @@ const ProductGrid = ({ products, onPageChange }) => {
                     objectFit="cover"
                   />
                   <Heading size="sm" mt="2" color={!'Background'}>
-                    {product.title}
+                    {product.name}
                   </Heading>
                 </Box>
                 <Box

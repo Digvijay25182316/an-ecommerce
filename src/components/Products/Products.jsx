@@ -16,7 +16,6 @@ const ProductPage = () => {
   const {successHandler,ErrorHandler,loadingHandler,addToCart}=useContext(CartContext)
   const [product,setProduct] =useState({})
   const [image,setImage]=useState("")
-  console.log(product)
   const {id} =useParams()
   useEffect(()=>{
     loadingHandler(true);

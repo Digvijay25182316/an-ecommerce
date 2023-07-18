@@ -21,6 +21,7 @@ function Home() {
   useEffect(() => {
     getProducts().then(({ data }) => {
       setProducts(data.products);
+      console.log(data.products)
     }).catch(err=>toast.error(err.message));
   },[]);
   
