@@ -41,7 +41,7 @@ const ProductGrid = ({ products, onPageChange }) => {
       top={'100px'}
       m={'auto'}
     >
-      <SimpleGrid columns={[1, 2, 3, 4, 5]} spacing={6}>
+      <SimpleGrid columns={[2, 2, 3, 4, 5]} spacing={6}>
         {visibleProducts &&
           visibleProducts.map(product => (
             <Link
