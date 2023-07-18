@@ -60,7 +60,20 @@ function CreateProductForm() {
     const handleSubmit =(e)=>{
         loadingHandler(true)
         e.preventDefault()
-        createProduct(formdata).then(data=>successHandler(data.data)).catch(err=>ErrorHandler(err))
+        createProduct(formdata).then(data=>{
+            successHandler(data.data)
+            setName("")
+            setQuantity("")
+            setBrand("")
+            setCategory("")
+            setDescription("")
+            setFeatures("")
+            setImage("")
+            setFeatures("")
+            setMaterial("")
+            setPrice("")
+            setImagePrev("")
+        }).catch(err=>ErrorHandler(err))
     }
   return (
     <VStack h={"full"} justifyContent={'center'} spacing={'16'} alignItems={"center"}>
