@@ -13,7 +13,6 @@ import ChangePassword from './components/Profile/ChangePassword';
 import UpdateProfile from './components/Profile/UpdateProfile';
 import ForgetPassword from './components/Auth/ForgetPassword';
 import Products from './components/Products/Products';
-
 import Users from './Admin/HandleUsers/Users';
 import DashBoard from './Admin/DashBoard/DashBoard';
 import Orders from './Admin/HandleOrder/Orders';
@@ -53,6 +52,7 @@ function App() {
         <Route path="/admin/users" element={<Users />} />
         <Route path="/admin/dashboard" element={<DashBoard />} />
         <Route path="/admin/orders" element={<Orders />} />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

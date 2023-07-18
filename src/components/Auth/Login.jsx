@@ -25,10 +25,8 @@ function LoginPage() {
         loadingHandler(true)
         event.preventDefault()
         loginuser(email,password).then(({data})=>{
-            console.log(data.token)
             CookieFields.tokenInCookie(data.token)
-            CookieFields.userInCookie(data.user)
-            console.log(data)       
+            CookieFields.userInCookie(data.user) 
             successHandler(data)
             storeUser(data.user)
             navigate("/")
