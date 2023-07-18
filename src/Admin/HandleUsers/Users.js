@@ -38,6 +38,7 @@ function Users() {
   const { loadingHandler, successHandler, ErrorHandler } =
     useContext(CartContext);
   const token = CookeiFields.getToken();
+  const [currentuser, setCurrentuser] = useState({});
   const [users, setUsers] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -50,6 +51,9 @@ function Users() {
           setUsers(data.users);
         })
         .catch(err => ErrorHandler(err));
+    }
+    if (CookeiFields.getUser() !== undefined) {
+      setCurrentuser(JSON.parse(CookeiFields.getUser()));
     }
   }, []);
 
@@ -158,6 +162,7 @@ function Users() {
                     <Td>{user.role}</Td>
                     <Td>
                       <Button
+                        isDisabled={user._id === currentuser._id}
                         variant={'outline'}
                         textColor={'purple.400'}
                         onClick={onOpen}
@@ -172,6 +177,7 @@ function Users() {
                     </Td>
                     <Td>
                       <Button
+                        isDisabled={user._id === currentuser._id}
                         color={'purple.400'}
                         onClick={() => handleDeleteuser(user.id)}
                       >
