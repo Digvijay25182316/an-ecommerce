@@ -153,6 +153,7 @@ const FullScreenModal = ({
                     alt={name}
                     height="200px"
                     objectFit="cover"
+                    loading="lazy"
                   />
                   <Heading size="sm" mt="2" color={!'Background'}>
                     {name}

@@ -58,7 +58,7 @@ function Register() {
             CookieFields.userInCookie(data.user)
             storeUser(data.user)
             navigate("/")
-        }).catch((err)=>ErrorHandler(err))
+        }).catch((err)=>{ErrorHandler(err)})
         }else{
         toast.error(
             "\"Confirm password and password\" fields does not match",

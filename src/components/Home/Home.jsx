@@ -1,12 +1,13 @@
 import { Box, Button, HStack, Stack, Text, VStack } from '@chakra-ui/react';
-import React, {useEffect, useState } from 'react'
+import React, {Suspense, useContext, useEffect, useState } from 'react'
 import { RxCross1 } from 'react-icons/rx';
 import Sidebar from './Sidebar';
-import ProductGrid from './ProductGrid';
 import Categories from './Categories';
 import axios from 'axios';
 import { SERVER_URL } from '../../App';
-import { toast } from 'react-hot-toast';
+import { CartContext } from '../../context/store';
+import CookieFields from '../../context/utils';
+const  ProductGrid =React.lazy(()=>import('./ProductGrid'));
 
 const getProducts = async () => {
   const data = await axios.get(`${SERVER_URL}/products`)
@@ -14,15 +15,16 @@ const getProducts = async () => {
 };
 
 function Home() {
+  const {ErrorHandler}=useContext(CartContext)
+  const ProductsArr=CookieFields.ProductsArrFromLocalStorage()
   const [sidebarOpen,setSideBarOpen] =useState(false)
-  const [products,setProducts]=useState([])
-
+  const [products,setProducts]=useState(ProductsArr?ProductsArr:[])
 
   useEffect(() => {
     getProducts().then(({ data }) => {
+      CookieFields.ProductsArrInLocalStorage(data.products)
       setProducts(data.products);
-      console.log(data.products)
-    }).catch(err=>toast.error(err.message));
+    }).catch(err=>ErrorHandler(err));
   },[]);
   
   return (
@@ -45,8 +47,9 @@ function Home() {
     </Box>
           <Sidebar/>
     </Box>}
-    
-      {products?<ProductGrid products={products}/>:<Box><Text>Products are loading</Text></Box>}
+    <Suspense fallback={<VStack alignItems={"center"} justifyContent={"center"}><Text children="Loading Products..."/></VStack>}>
+      {<ProductGrid products={products}/>}
+      </Suspense>
     
     </HStack>
     </Stack>

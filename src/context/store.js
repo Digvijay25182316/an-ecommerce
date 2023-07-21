@@ -48,6 +48,7 @@ const ContextProvider = ({ children }) => {
       axios.interceptors.request.eject(requestInterceptor);
     };
   }, [isError, isSuccess]);
+
   const addToCart = item => {
     const products = CookieFields.getProducts();
     if (!products) {
@@ -122,14 +123,14 @@ const ContextProvider = ({ children }) => {
     setIsSuccess(true);
   };
   const ErrorHandler = value => {
-    if (value.response.data.message) {
-      toast.error(value.response.data.message);
-    } else if (value.message) {
-      toast.error(value.message);
-    } else {
-      toast.error('Something bad has happend');
-    }
     setIsLoading(false);
+    if (value.message === 'Network Error') {
+      toast.error('Network Error: Check your internet connection.');
+    } else if (value.response.data.message) {
+      toast.error(value.response.data.message);
+    } else {
+      toast.error(value.message);
+    }
     setIsSuccess(false);
     setIsError(true);
   };

@@ -35,7 +35,7 @@ const ProductPage = () => {
     <Box maxW={"90vw"} p={8} gap={["10px","20px"]} display={"flex"} flexDirection={"column"} alignItems={"center"} key={id}>
     <Flex align="center"direction={["column","row"]}>
       <Box>
-      <Image src={image?image:product.image} alt="Product" borderRadius="md" w={[400,400]}/>
+      <Image src={image?image:product.image} alt={product.name} borderRadius="md" w={[400,400]} loading="lazy"/>
       </Box>
       <Box ml={8} display={"flex"} gap={["10px","50px"]} flexDirection={["column","row"]} alignItems={"center"}>
         <Box maxW={"200px"}>

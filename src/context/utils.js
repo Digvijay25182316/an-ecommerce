@@ -50,6 +50,25 @@ const getCartItem = () => {
   }
 };
 
+const usersArrInLocalStorage = usersArr => {
+  const users = JSON.stringify(usersArr);
+  localStorage.setItem('users', users);
+};
+const usersArrFromLocalStorage = () => {
+  const storedUsersJSON = localStorage.getItem('users');
+  const storedUsers = JSON.parse(storedUsersJSON);
+  return storedUsers;
+};
+
+const ProductsArrInLocalStorage = newProducts => {
+  localStorage.setItem('products', JSON.stringify(newProducts));
+};
+const ProductsArrFromLocalStorage = () => {
+  const products = localStorage.getItem('products');
+  const productsArr = JSON.parse(products);
+  return productsArr;
+};
+
 const CookieFields = {
   getUser,
   getToken,
@@ -58,6 +77,10 @@ const CookieFields = {
   storeProducts,
   getProducts,
   getCartItem,
+  usersArrFromLocalStorage,
+  usersArrInLocalStorage,
+  ProductsArrFromLocalStorage,
+  ProductsArrInLocalStorage,
 };
 
 export default CookieFields;

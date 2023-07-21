@@ -9,6 +9,7 @@ import CreateProductForm from './CreateProductForm'
 import axios from 'axios'
 import { SERVER_URL } from '../../App'
 import { CartContext } from '../../context/store'
+import CookieFields from '../../context/utils'
 
 const getProducts =async()=>{
   const data = await axios.get(`${SERVER_URL}/products`,{headers:{
@@ -20,14 +21,17 @@ const getProducts =async()=>{
 function CreateProduct() {
   const {loadingHandler,successHandler,ErrorHandler}=useContext(CartContext)
   const [isViewOn,setIsViewOff] = useState(false)
-  const [product,setProduct] = useState([])
+  const ProductsArr = CookieFields.ProductsArrFromLocalStorage()
+  const [product,setProduct] = useState(ProductsArr?ProductsArr:[])
 
   useEffect(() => {
+    if(!ProductsArr){
     loadingHandler(true)
     getProducts().then(({ data }) => {
       setProduct(data.products);
       successHandler(data)
     }).catch(err=>ErrorHandler(err));
+  }
   },[]);
   return (
     <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>

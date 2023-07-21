@@ -23,6 +23,7 @@ import axios from 'axios';
 import { SERVER_URL } from '../../App';
 import CookeiFields from '../../context/utils.js';
 import { CartContext } from '../../context/store';
+import CookieFields from '../../context/utils.js';
 
 const getUsers = async token => {
   const data = await axios.get(`${SERVER_URL}/users`, {
@@ -34,21 +35,34 @@ const getUsers = async token => {
   return data;
 };
 
+const deleteUser = async (id, token) => {
+  const data = await axios.delete(`${SERVER_URL}/deleteuser/${id}`, {
+    headers: {
+      Authorization: `Bearer <${token}>`,
+    },
+    withCredentials: true,
+  });
+  return data;
+};
+
 function Users() {
-  const { loadingHandler, successHandler, ErrorHandler } =
+  const { ErrorHandler, loadingHandler, successHandler } =
     useContext(CartContext);
+  const usersArr = CookieFields.usersArrFromLocalStorage('users');
   const token = CookeiFields.getToken();
   const [currentuser, setCurrentuser] = useState({});
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(usersArr ? usersArr : []);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     if (token) {
-      loadingHandler(true);
       getUsers(token)
         .then(({ data }) => {
-          successHandler(data.users);
+          CookieFields.usersArrInLocalStorage(data.users);
           setUsers(data.users);
+          if (!users) {
+            setUsers(data.users);
+          }
         })
         .catch(err => ErrorHandler(err));
     }
@@ -57,7 +71,17 @@ function Users() {
     }
   }, []);
 
-  const handleDeleteuser = id => {};
+  const handleDeleteuser = id => {
+    const updatedUsers = users.filter(item => item._id !== id);
+    loadingHandler(true);
+    deleteUser(id, token)
+      .then(data => {
+        setUsers(updatedUsers);
+        CookieFields.usersArrInLocalStorage(updatedUsers);
+        successHandler(data.data);
+      })
+      .catch(err => ErrorHandler(err));
+  };
   return (
     <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
       <HStack m={'20px'}>
@@ -148,18 +172,36 @@ function Users() {
                 <Th>Delete</Th>
               </Tr>
             </Thead>
-            {users ? (
+            {users.length === 0 ? (
+              <Text children="There Is No User To show" />
+            ) : (
               users.map(user => (
                 <Tbody key={user._id}>
                   <Tr key={user._id} id={user.id}>
-                    <Td>{user._id}</Td>
-                    <Td>{user.name}</Td>
-                    <Td>{user.email}</Td>
-                    <Td>{user.paymentHistory}</Td>
-                    <Td>{user.orderHistory}</Td>
-                    <Td>{user.currentOrders}</Td>
-                    <Td>{user.createdAt.split('T')[0]}</Td>
-                    <Td>{user.role}</Td>
+                    <Td>
+                      <Text children={user._id} />
+                    </Td>
+                    <Td>
+                      <Text children={user.name} />
+                    </Td>
+                    <Td>
+                      <Text children={user.email} />
+                    </Td>
+                    <Td>
+                      <Text children={user.paymentHistory} />
+                    </Td>
+                    <Td>
+                      <Text children={user.orderHistory} />
+                    </Td>
+                    <Td>
+                      <Text children={user.currentOrders} />
+                    </Td>
+                    <Td>
+                      <Text children={user.createdAt.split('T')[0]} />
+                    </Td>
+                    <Td>
+                      <Text children={user.role} />
+                    </Td>
                     <Td>
                       <Button
                         isDisabled={user._id === currentuser._id}
@@ -179,7 +221,7 @@ function Users() {
                       <Button
                         isDisabled={user._id === currentuser._id}
                         color={'purple.400'}
-                        onClick={() => handleDeleteuser(user.id)}
+                        onClick={() => handleDeleteuser(user._id)}
                       >
                         <RiDeleteBinLine />
                       </Button>
@@ -187,8 +229,6 @@ function Users() {
                   </Tr>
                 </Tbody>
               ))
-            ) : (
-              <Text children="There Is No User To show" />
             )}
           </Table>
         </Stack>

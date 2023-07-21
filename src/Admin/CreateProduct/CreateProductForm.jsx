@@ -13,6 +13,29 @@ export const fileuploadStyle={
     backgroundColor:"white",
 }
 
+const convertToWebP = (imageFile) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = URL.createObjectURL(imageFile);
+  
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+  
+        // Convert to WebP format
+        canvas.toBlob((blob) => {
+          // Create a new File object with the converted Blob and the same name as the original file
+          const convertedImageFile = new File([blob], imageFile.name, { type: "image/webp" });
+          resolve(convertedImageFile);
+        }, "image/webp");
+      };
+    });
+  };
+  
+
 const createProduct =async(formdata,token)=>{
     const data = await axios.post(`${SERVER_URL}/admin/createproduct`,formdata,{headers:{
         "Content-Type":"multipart/form-data",
@@ -33,6 +56,7 @@ function CreateProductForm() {
     const [features,setFeatures] = useState("")
     const [brand,setBrand] =useState("")
     const [imagePrev,setImagePrev] = useState('')
+    const [convertedWebpImage, setConvertedWebpImage] = useState(null);
     const [image,setImage] = useState('')
     const [material,setMaterial] = useState("")
 
@@ -45,8 +69,8 @@ function CreateProductForm() {
     formdata.append("brand",brand)
     formdata.append("material",material)
     formdata.append("features",features)
-    formdata.append("file",image)
 
+    
     const changeImageHandler=(e)=>{
         const file=e.target.files[0];
         const reader = new FileReader();
@@ -55,11 +79,18 @@ function CreateProductForm() {
             setImagePrev(reader.result)
             setImage(file)
         }
+        //converting the image to webp
+        convertToWebP(file).then((webpFile) => {
+            setConvertedWebpImage(webpFile);
+          });
     }
-
+    
     const handleSubmit =(e)=>{
+        const imageToUse = convertedWebpImage || image;
+        formdata.append("file", imageToUse);
         loadingHandler(true)
         e.preventDefault()
+        console.log(...formdata)
         createProduct(formdata).then(data=>{
             successHandler(data.data)
             setName("")

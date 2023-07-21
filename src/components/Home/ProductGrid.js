@@ -15,7 +15,6 @@ import { CartContext } from '../../context/store';
 const ProductGrid = ({ products, onPageChange }) => {
   const { loadingHandler } = useContext(CartContext);
   const [currentPage, setCurrentPage] = useState(1);
-  // const [products, setProducts] = useState([]);
   const [productsPerPage, setProductsPerPage] = useState(30);
 
   const totalPages = Math.ceil(products.length / productsPerPage);
@@ -74,6 +73,7 @@ const ProductGrid = ({ products, onPageChange }) => {
                     alt={product.name}
                     height="200px"
                     objectFit="cover"
+                    loading="lazy"
                   />
                   <Heading size="sm" mt="2" color={!'Background'}>
                     {product.name}

@@ -29,20 +29,24 @@ const getProfile=async(token)=>{
     }
 
 function Profile() {
-    const [user,setUser]=useState({})
+const  userDetails=JSON.parse(CookieFields.getUser())
+    const [user,setUser]=useState(userDetails?userDetails:{})
     const {ErrorHandler,successHandler,loadingHandler} = useContext(CartContext)
 
     const changeImageSubmitHandler=({e,image})=>{
         e.preventDefault()
     }
+    console.log(user,userDetails)
     useEffect(()=>{
         const token = CookieFields.getToken()
+        if(!userDetails){
         loadingHandler(true)
         getProfile(token).then(data=>{
             setUser(data.data.user)
             successHandler(data.data)        
         }).catch(err=>ErrorHandler(err))
-    },[])
+    }
+    },[user])
 
     const {isOpen,onClose , onOpen} =useDisclosure()
   return (
@@ -66,7 +70,7 @@ function Profile() {
                 </HStack>
                 <HStack>
                     <Text children="Created At" fontWeight={'bold'}/>
-                    <Text children={new Date(user.createdAt).toUTCString()}/>
+                    <Text children={new Date(user.createdAt).toString().split("G")[0]}/>
                 </HStack>
                     <Stack direction={['column','row']} alignItems={'center'}>
                         <Link to={'/updateprofile'}>
