@@ -54,7 +54,7 @@ const  userDetails=JSON.parse(CookieFields.getUser())
         <Heading children='Profile' m={'8'} textTransform={'uppercase'}/>
         <Stack justifyContent={'flex-start '} direction={['column','row']} alignItems={'center'} spacing={['8','16']} padding={'8'}>
             <VStack>
-                &&<Avatar boxSize={'48'} src={user.avatar&&`${user.avatar.url}`}/>
+                &&<Avatar boxSize={'48'} src={user.avatar&&`${user.avatar.url}`} loading='lazy'/>
                 <Button onClick={onOpen} colorScheme='yellow' variant={'ghost'} color={"yellow.400"}>
                     Change Photo
                 </Button>
