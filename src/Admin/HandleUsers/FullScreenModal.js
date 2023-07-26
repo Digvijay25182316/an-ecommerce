@@ -15,6 +15,7 @@ import {
   FormLabel,
 } from '@chakra-ui/react';
 import { CartContext } from '../../context/store';
+import CookieFields from '../../context/utils';
 import axios from 'axios';
 import { SERVER_URL } from '../../App';
 
@@ -33,10 +34,11 @@ const updaterole = async (id, role, token) => {
 };
 
 const FullScreenModal = ({ isOpen, onClose, userRole, id }) => {
-  const { loadingHandler, successHandler, ErrorHandler, token } =
+  const { loadingHandler, successHandler, ErrorHandler } =
     useContext(CartContext);
   const [role, setRole] = useState(userRole);
   const Closehandler = e => {
+    const token = CookieFields.getToken();
     e.preventDefault();
     if (token) {
       loadingHandler(true);

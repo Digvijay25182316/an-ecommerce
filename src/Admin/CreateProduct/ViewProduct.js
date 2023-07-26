@@ -32,8 +32,10 @@ const deleteProduct = async (id, token) => {
 const ProductTable = ({ productArray }) => {
   const [products, setproducts] = useState(productArray);
   const { onOpen, isOpen, onClose } = useDisclosure();
-  const { loadingHandler, successHandler, ErrorHandler, token } =
+  const { loadingHandler, successHandler, ErrorHandler } =
     useContext(CartContext);
+
+  const token = CookieFields.getToken();
 
   const handleDeleteProduct = id => {
     const updatedproducts = products.filter(Product => Product._id !== id);

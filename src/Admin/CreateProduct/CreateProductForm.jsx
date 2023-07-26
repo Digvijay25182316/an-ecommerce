@@ -35,6 +35,7 @@ const convertToWebP = (imageFile) => {
     });
   };
   
+
 const createProduct =async(formdata,token)=>{
     const data = await axios.post(`${SERVER_URL}/admin/createproduct`,formdata,{headers:{
         "Content-Type":"multipart/form-data",
@@ -46,7 +47,7 @@ const createProduct =async(formdata,token)=>{
 }
 
 function CreateProductForm() {
-    const {loadingHandler,successHandler,ErrorHandler,token}=useContext(CartContext)
+    const {loadingHandler,successHandler,ErrorHandler}=useContext(CartContext)
     const [name,setName] = useState("")
     const [price,setPrice] = useState("")
     const [description,setDescription] = useState("")
@@ -89,7 +90,7 @@ function CreateProductForm() {
         formdata.append("file", imageToUse);
         loadingHandler(true)
         e.preventDefault()
-        createProduct(formdata,token).then(data=>{
+        createProduct(formdata).then(data=>{
             successHandler(data.data)
             setName("")
             setQuantity("")

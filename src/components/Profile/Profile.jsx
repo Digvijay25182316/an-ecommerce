@@ -6,6 +6,7 @@ import axios from 'axios'
 import { SERVER_URL } from '../../App'
 import CookieFields from '../../context/utils'
 import { CartContext } from '../../context/store'
+import Cookies from 'js-cookie'
 
 const changeProfileImage = async(formdata,token)=>{
     const data = await axios.put(`${SERVER_URL}/updateprofilepicture`,formdata,{
@@ -28,13 +29,16 @@ const getProfile=async(token)=>{
     }
 
 function Profile() {
-const  {ErrorHandler,successHandler,loadingHandler,user,token}=useContext(CartContext)
-    const [users,setUser]=useState(user?user:{})
-    const changeImageSubmitHandler=({e})=>{
+const  userDetails=JSON.parse(CookieFields.getUser())
+    const [user,setUser]=useState(userDetails?userDetails:{})
+    const {ErrorHandler,successHandler,loadingHandler} = useContext(CartContext)
+
+    const changeImageSubmitHandler=({e,image})=>{
         e.preventDefault()
     }
     useEffect(()=>{
-        if(!user){
+        const token = CookieFields.getToken()
+        if(!userDetails){
         loadingHandler(true)
         getProfile(token).then(data=>{
             setUser(data.data.user)
@@ -50,7 +54,7 @@ const  {ErrorHandler,successHandler,loadingHandler,user,token}=useContext(CartCo
         <Heading children='Profile' m={'8'} textTransform={'uppercase'}/>
         <Stack justifyContent={'flex-start '} direction={['column','row']} alignItems={'center'} spacing={['8','16']} padding={'8'}>
             <VStack>
-                &&<Avatar boxSize={'48'} src={users.avatar&&`${users.avatar.url}`} loading='lazy'/>
+                &&<Avatar boxSize={'48'} src={user.avatar&&`${user.avatar.url}`} loading='lazy'/>
                 <Button onClick={onOpen} colorScheme='yellow' variant={'ghost'} color={"yellow.400"}>
                     Change Photo
                 </Button>
@@ -58,19 +62,15 @@ const  {ErrorHandler,successHandler,loadingHandler,user,token}=useContext(CartCo
             <VStack spacing={'4'} alignItems={['center','flex-start']}>
                 <HStack>
                     <Text children='Name' fontWeight={'bold'}/>
-                    <Text children={users.name}/>
+                    <Text children={user.name}/>
                 </HStack>{" "}
                 <HStack>
                     <Text children="Email" fontWeight={'bold'}/>
-                    <Text children={users.email}/>
+                    <Text children={user.email}/>
                 </HStack>
                 <HStack>
                     <Text children="Created At" fontWeight={'bold'}/>
-                    <Text children={new Date(users.createdAt).toString().split("G")[0]}/>
-                </HStack>
-                <HStack>
-                    <Text children="role" fontWeight={'bold'}/>
-                    <Text children={users.role}/>
+                    <Text children={new Date(user.createdAt).toString().split("G")[0]}/>
                 </HStack>
                     <Stack direction={['column','row']} alignItems={'center'}>
                         <Link to={'/updateprofile'}>
@@ -115,7 +115,7 @@ function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}){
         loadingHandler(true)
         changeProfileImage(formdata,token).then((data)=>{
             successHandler(data.data);
-            CookieFields.userInCookie(data.data.user)
+            CookieFields.userInCookie(data.data)
             storeUser(data.data.user)
         }).catch(err=>ErrorHandler(err))}
         
