@@ -23,7 +23,7 @@ import { Toaster } from 'react-hot-toast';
 import Loading from './components/MainComponents/Loading';
 import NotFound from './components/NotFound/NotFound';
 
-export const SERVER_URL = 'http://localhost:4000/api/v1'; // process.env.REACT_APP_SERVER_URL;
+export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 function App() {
   return (
