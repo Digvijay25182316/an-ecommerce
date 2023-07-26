@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Avatar, Box, Button, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, VStack, useDisclosure } from '@chakra-ui/react'
+import { Avatar, Box, Button, HStack, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, VStack, useDisclosure } from '@chakra-ui/react'
 import {RxHamburgerMenu}  from "react-icons/rx"
 import {BsCart2,BsCartCheckFill}  from "react-icons/bs"
 import {AiOutlineSearch}  from "react-icons/ai"
@@ -11,6 +11,7 @@ import { CartContext } from '../../context/store'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 import { SERVER_URL } from '../../App'
+import Logo from "../../assets/MainLogo.png"
 
   const logoutfunc=async()=>{
     const response = await axios.get(`${SERVER_URL}/logout`)
@@ -36,7 +37,10 @@ function Header() {
     <Stack flexDirection={'row'} alignItems={"center"} justifyContent={"center"}>
       <VStack>        
         <Link to={"/"}>
-        <Text children={"Ecommerce"} textColor={"brown"} fontFamily={"cursive"} fontSize={"2xl"} padding={"2.5"} fontWeight={"bold"}/>
+          <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
+          <Image src={Logo} height={"50px"} objectFit={"contain"} loading='lazy'/>
+          <Text children={"Veda's Creation"} textColor={"yellow.400"} fontSize={"2xl"} fontWeight={"bold"}/>
+        </Box>
         </Link>
         <HStack boxShadow={isAdminRoute?"0 10px 15px -3px rgba(0, 0, 0, 0.1),0 4px 6px -2px rgba(107, 70, 193, 0.5)":"lg"} width={["90vw","80vw"]} justifyContent={"space-between"} px={"5"} alignItems={"center"}>
         <Box alignItems={"center"}>
