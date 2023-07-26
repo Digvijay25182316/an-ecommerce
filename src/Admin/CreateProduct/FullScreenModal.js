@@ -115,7 +115,7 @@ const FullScreenModal = ({
     <Modal isOpen={isOpen} onClose={onClose} size="full" bg={'white'}>
       <ModalOverlay />
       <ModalContent boxShadow="none">
-        <ModalBody maxHeight={'100vh'}>
+        <ModalBody maxHeight={'90vh'}>
           <Box display={'flex'} flexDirection={['column', 'row']}>
             <VStack
               h={'full'}
