@@ -6,7 +6,6 @@ import axios from 'axios'
 import { SERVER_URL } from '../../App'
 import CookieFields from '../../context/utils'
 import { CartContext } from '../../context/store'
-import Cookies from 'js-cookie'
 
 const changeProfileImage = async(formdata,token)=>{
     const data = await axios.put(`${SERVER_URL}/updateprofilepicture`,formdata,{
@@ -29,20 +28,17 @@ const getProfile=async(token)=>{
     }
 
 function Profile() {
-const  userDetails=JSON.parse(CookieFields.getUser())
-    const [user,setUser]=useState(userDetails?userDetails:{})
-    const {ErrorHandler,successHandler,loadingHandler} = useContext(CartContext)
-
-    const changeImageSubmitHandler=({e,image})=>{
+const  {ErrorHandler,successHandler,loadingHandler,user,token}=useContext(CartContext)
+    const [users,setUser]=useState(user?user:{})
+    const changeImageSubmitHandler=({e})=>{
         e.preventDefault()
     }
-    console.log(user,userDetails)
     useEffect(()=>{
-        const token = CookieFields.getToken()
-        if(!userDetails){
+        if(!user){
         loadingHandler(true)
         getProfile(token).then(data=>{
             setUser(data.data.user)
+            CookieFields.userInCookie(data.data.user)
             successHandler(data.data)        
         }).catch(err=>ErrorHandler(err))
     }
@@ -54,7 +50,7 @@ const  userDetails=JSON.parse(CookieFields.getUser())
         <Heading children='Profile' m={'8'} textTransform={'uppercase'}/>
         <Stack justifyContent={'flex-start '} direction={['column','row']} alignItems={'center'} spacing={['8','16']} padding={'8'}>
             <VStack>
-                &&<Avatar boxSize={'48'} src={user.avatar&&`${user.avatar.url}`} loading='lazy'/>
+                &&<Avatar boxSize={'48'} src={users.avatar&&`${users.avatar.url}`} loading='lazy'/>
                 <Button onClick={onOpen} colorScheme='yellow' variant={'ghost'} color={"yellow.400"}>
                     Change Photo
                 </Button>
@@ -62,15 +58,19 @@ const  userDetails=JSON.parse(CookieFields.getUser())
             <VStack spacing={'4'} alignItems={['center','flex-start']}>
                 <HStack>
                     <Text children='Name' fontWeight={'bold'}/>
-                    <Text children={user.name}/>
+                    <Text children={users.name}/>
                 </HStack>{" "}
                 <HStack>
                     <Text children="Email" fontWeight={'bold'}/>
-                    <Text children={user.email}/>
+                    <Text children={users.email}/>
                 </HStack>
                 <HStack>
                     <Text children="Created At" fontWeight={'bold'}/>
-                    <Text children={new Date(user.createdAt).toString().split("G")[0]}/>
+                    <Text children={new Date(users.createdAt).toString().split("G")[0]}/>
+                </HStack>
+                <HStack>
+                    <Text children="role" fontWeight={'bold'}/>
+                    <Text children={users.role}/>
                 </HStack>
                     <Stack direction={['column','row']} alignItems={'center'}>
                         <Link to={'/updateprofile'}>
@@ -114,10 +114,8 @@ function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}){
         if(token){
         loadingHandler(true)
         changeProfileImage(formdata,token).then((data)=>{
-            Cookies.remove("user")
             successHandler(data.data);
-            if(!Cookies.get("user")){
-            CookieFields.userInCookie(data.data)}
+            CookieFields.userInCookie(data.data.user)
             storeUser(data.data.user)
         }).catch(err=>ErrorHandler(err))}
         

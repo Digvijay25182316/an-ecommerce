@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Box,
   Button,
@@ -16,8 +16,51 @@ import {
 } from '@chakra-ui/react';
 import RatingComponent from '../../components/Products/RatingComponent';
 import { fileuploadStyle } from './CreateProductForm';
+import axios from 'axios';
+import { SERVER_URL } from '../../App';
+import { CartContext } from '../../context/store';
+import CookieFields from '../../context/utils';
+
+const updateProductDetails = async (id, token, formdata) => {
+  const data = await axios.put(
+    `${SERVER_URL}/admin/productupdate/${id}`,
+    formdata,
+    {
+      headers: {
+        Authorization: `Bearer <${token}>`,
+      },
+      withCredentials: true,
+    }
+  );
+  return data;
+};
+
+const convertToWebP = imageFile => {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.src = URL.createObjectURL(imageFile);
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      // Convert to WebP format
+      canvas.toBlob(blob => {
+        // Create a new File object with the converted Blob and the same name as the original file
+        const convertedImageFile = new File([blob], imageFile.name, {
+          type: 'image/webp',
+        });
+        resolve(convertedImageFile);
+      }, 'image/webp');
+    };
+  });
+};
 
 const FullScreenModal = ({
+  id,
   isOpen,
   onClose,
   prename,
@@ -31,6 +74,17 @@ const FullScreenModal = ({
   const [description, setDescription] = useState(predescription);
   const [price, setPrice] = useState(preprice);
   const [Stock, setStock] = useState(prestock);
+  const [convertedWebpImage, setConvertedWebpImage] = useState(null);
+  const { loadingHandler, successHandler, ErrorHandler } =
+    useContext(CartContext);
+
+  const formdata = new FormData();
+  formdata.append('name', name);
+  formdata.append('price', price);
+  formdata.append('description', description);
+  formdata.append('quantity', Stock);
+
+  const token = CookieFields.getToken();
 
   const handleImageUpload = event => {
     const file = event.target.files[0];
@@ -41,9 +95,21 @@ const FullScreenModal = ({
     };
 
     reader.readAsDataURL(file);
+    //converting the image to webp
+    convertToWebP(file).then(webpFile => {
+      setConvertedWebpImage(webpFile);
+    });
   };
   const handleSubmit = e => {
+    const imageToUse = convertedWebpImage || Prevewimage;
+    formdata.append('file', imageToUse);
     e.pereventDefault();
+    loadingHandler(true);
+    updateProductDetails(id, token, formdata)
+      .then(data => {
+        successHandler(data.data);
+      })
+      .catch(err => ErrorHandler(err));
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="full" bg={'white'}>

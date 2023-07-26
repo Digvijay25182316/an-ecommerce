@@ -214,6 +214,7 @@ function Users() {
                           isOpen={isOpen}
                           onClose={onClose}
                           userRole={user.role ? user.role : ''}
+                          id={user._id ? user._id : ''}
                         />
                       </Button>
                     </Td>

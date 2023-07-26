@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Table,
   Thead,
@@ -14,14 +14,36 @@ import {
 } from '@chakra-ui/react';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import FullScreenModal from './FullScreenModal';
+import axios from 'axios';
+import { SERVER_URL } from '../../App';
+import { CartContext } from '../../context/store';
+import CookieFields from '../../context/utils';
+
+const deleteProduct = async (id, token) => {
+  const data = await axios.delete(`${SERVER_URL}/admin/product/${id}`, {
+    headers: {
+      Authorization: `Bearer <${token}>`,
+    },
+    withCredentials: true,
+  });
+  return data;
+};
 
 const ProductTable = ({ productArray }) => {
   const [products, setproducts] = useState(productArray);
   const { onOpen, isOpen, onClose } = useDisclosure();
+  const { loadingHandler, successHandler, ErrorHandler, token } =
+    useContext(CartContext);
 
   const handleDeleteProduct = id => {
-    // const updatedproducts = products.filter(Product => Product._id !== id);
-    // setproducts(updatedproducts);
+    const updatedproducts = products.filter(Product => Product._id !== id);
+    loadingHandler(true);
+    deleteProduct(id, token)
+      .then(data => {
+        successHandler(data.data);
+        setproducts(updatedproducts);
+      })
+      .catch(err => ErrorHandler(err));
   };
 
   return (
@@ -76,6 +98,7 @@ const ProductTable = ({ productArray }) => {
                       <FullScreenModal
                         isOpen={isOpen}
                         onClose={onClose}
+                        id={Product._id ? Product._id : ''}
                         prename={Product.name ? Product.name : ''}
                         predescription={
                           Product.description ? Product.description : ''

@@ -11,10 +11,12 @@ const CartContext = createContext();
 // Create a provider component
 const ContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [token, setToken] = useState('');
+  const tokenFeild = CookieFields.getToken();
+  const [token, setToken] = useState(tokenFeild ? tokenFeild : '');
   const [isAdmin, setIsAdmin] = useState(false);
   const [cartItem, setCartItem] = useState([]);
-  const [user, setUser] = useState({});
+  const userDetails = JSON.parse(CookieFields.getUser());
+  const [user, setUser] = useState(userDetails ? userDetails : {});
   const [isloading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
