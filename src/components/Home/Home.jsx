@@ -9,23 +9,25 @@ import { CartContext } from '../../context/store';
 import CookieFields from '../../context/utils';
 const  ProductGrid =React.lazy(()=>import('./ProductGrid'));
 
-const getProducts = async () => {
-  const data = await axios.get(`${SERVER_URL}/products`)
+const getProducts = async (query) => {
+  const data = await axios.get(`${SERVER_URL}/products`,{
+    params:query
+  })
   return data;
 };
 
 function Home() {
-  const {ErrorHandler}=useContext(CartContext)
+  const {ErrorHandler,query}=useContext(CartContext)
   const ProductsArr=CookieFields.ProductsArrFromLocalStorage()
   const [sidebarOpen,setSideBarOpen] =useState(false)
   const [products,setProducts]=useState(ProductsArr?ProductsArr:[])
 
   useEffect(() => {
-    getProducts().then(({ data }) => {
+    getProducts(query).then(({ data }) => {
       CookieFields.ProductsArrInLocalStorage(data.products)
       setProducts(data.products);
     }).catch(err=>ErrorHandler(err));
-  },[]);
+  },[query]);
   
   return (
     <section>

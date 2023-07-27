@@ -18,6 +18,7 @@ const ContextProvider = ({ children }) => {
   const [isloading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [query, setQuery] = useState({});
 
   useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use(config => {
@@ -105,6 +106,10 @@ const ContextProvider = ({ children }) => {
     setCartItem(updatedCart);
   };
 
+  const storeQuery = query => {
+    setQuery(query);
+  };
+
   const storeUser = data => {
     setIsAuthenticated(true);
     setUser(data.user);
@@ -160,6 +165,8 @@ const ContextProvider = ({ children }) => {
     successHandler,
     ErrorHandler,
     isloading,
+    storeQuery,
+    query,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

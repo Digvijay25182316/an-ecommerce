@@ -1,5 +1,6 @@
 import { Box, Checkbox, Heading, Stack, VStack } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { CartContext } from '../../context/store';
 
 function extractNumbersFromString(inputString) {
   const regex = /\d+/g; // Matches one or more digits
@@ -23,24 +24,24 @@ function extractNumbersFromString(inputString) {
 }
 
 function Sidebar() {
-  const [query,setQuery]=useState("")
+  const {storeQuery}=useContext(CartContext)
   const [filters, setFilters] = useState({
     brands: ['OnePlus', 'boAt', 'realme', 'iQOO', 'Redmi', 'Samsung'],
     selectedBrands: [],
     selectedPriceRange: '',
     selectedItemCondition: ''
   });
-  console.log(query)
   useEffect(() => {
     const brandKeywords =filters.selectedBrands.length!==0?filters.selectedBrands.length!==1?`[${filters.selectedBrands}]`:filters.selectedBrands.toString():''
-    const min=extractNumbersFromString(filters.selectedPriceRange).min?extractNumbersFromString(filters.selectedPriceRange).min:""
-    const max=extractNumbersFromString(filters.selectedPriceRange).max?extractNumbersFromString(filters.selectedPriceRange).max:""
-
-    // Create the query string based on the selected filters
-    const queryString = `keywords=${brandKeywords}&price${min&&`[gt]`}=${min}&price${max&&`[lt]`}=${max}`;
-
+    const min=extractNumbersFromString(filters.selectedPriceRange).min&&extractNumbersFromString(filters.selectedPriceRange).min
+    const max=extractNumbersFromString(filters.selectedPriceRange).max&&extractNumbersFromString(filters.selectedPriceRange).max
+    const queryString={
+      ...(brandKeywords && { keyword: brandKeywords }),
+      ...(min && { "price[gt]": min }),
+      ...(max && { "price[lt]": max }),
+    }
     // Update the query state and append to the URL
-    setQuery(queryString);
+    storeQuery(queryString);
   }, [filters]);
   const handleFilterChange = (filterType) => (event) => {
     const { value, checked } = event.target;

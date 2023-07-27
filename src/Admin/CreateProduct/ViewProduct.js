@@ -37,15 +37,15 @@ const ProductTable = ({ productArray }) => {
   const { onOpen, isOpen, onClose } = useDisclosure();
   const { loadingHandler, successHandler, ErrorHandler } =
     useContext(CartContext);
+  const [filterName, setFilterName] = useState('');
   const [filterPrice, setFilterPrice] = useState('');
   const [filterStock, setFilterStock] = useState('');
-  const [filterName, setFilterName] = useState('');
   const [filterCreatedAt, setFilterCreatedAt] = useState('');
   const [filterMaterial, setFilterMaterial] = useState('');
   const [filterRatings, setFilterRatings] = useState('');
 
   // Update the filteredProducts array whenever any filter changes
-  useEffect(() => {
+  const applyFilters = () => {
     const filtered = productArray.filter(product => {
       // Custom filtering logic based on selected filter values
       const priceMatch = filterPrice
@@ -78,15 +78,7 @@ const ProductTable = ({ productArray }) => {
     });
 
     setproducts(filtered);
-  }, [
-    productArray,
-    filterPrice,
-    filterStock,
-    filterName,
-    filterCreatedAt,
-    filterMaterial,
-    filterRatings,
-  ]);
+  };
   const token = CookieFields.getToken();
 
   const handleDeleteProduct = id => {
@@ -121,11 +113,10 @@ const ProductTable = ({ productArray }) => {
               gap={'5'}
               p={'5px'}
               rounded={'lg'}
-              bg={'Menu'}
+              bg={'background'}
             >
               <Text children="Name" />
               <Input
-                focusBorderColor="purple.400"
                 value={filterName}
                 onChange={e => setFilterName(e.target.value)}
                 size={'sm'}
@@ -137,7 +128,7 @@ const ProductTable = ({ productArray }) => {
               gap={'5'}
               p={'5px'}
               rounded={'lg'}
-              bg={'Menu'}
+              bg={'background'}
             >
               <Text children="Stock" />
               <Input
@@ -152,7 +143,7 @@ const ProductTable = ({ productArray }) => {
               gap={'5'}
               p={'5px'}
               rounded={'lg'}
-              bg={'Menu'}
+              bg={'background'}
             >
               <Text children="Price" />
               <Input
@@ -167,12 +158,12 @@ const ProductTable = ({ productArray }) => {
               gap={'5'}
               p={'5px'}
               rounded={'lg'}
-              bg={'Menu'}
+              bg={'background'}
             >
-              <Text children="Name" />
+              <Text children="CreatedAt" />
               <Input
-                value={filterName}
-                onChange={e => setFilterName(e.target.value)}
+                value={filterCreatedAt}
+                onChange={e => setFilterCreatedAt(e.target.value)}
                 size={'sm'}
               />
             </Box>
@@ -182,7 +173,7 @@ const ProductTable = ({ productArray }) => {
               gap={'5'}
               p={'5px'}
               rounded={'lg'}
-              bg={'Menu'}
+              bg={'background'}
             >
               <Text children="Ratings" />
               <Input
@@ -197,7 +188,7 @@ const ProductTable = ({ productArray }) => {
               gap={'5'}
               p={'5px'}
               rounded={'lg'}
-              bg={'Menu'}
+              bg={'background'}
             >
               <Text children="Material" />
               <Input
@@ -206,6 +197,9 @@ const ProductTable = ({ productArray }) => {
                 size={'sm'}
               />
             </Box>
+            <Button onClick={() => applyFilters()} size={'sm'}>
+              Apply Filters
+            </Button>
           </Box>
         )}
       </Box>

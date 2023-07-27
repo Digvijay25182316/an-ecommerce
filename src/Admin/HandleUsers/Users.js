@@ -56,28 +56,11 @@ function Users() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filterOpen, setFilterOpen] = useState(false);
 
-  const [filterEmail, setFilterEmail] = useState('');
   const [filterUsername, setFilterUsername] = useState('');
+  const [filterEmail, setFilterEmail] = useState('');
   const [filterCurrentOrders, setFilterCurrentOrders] = useState('');
   const [filterCreatedAt, setFilterCreatedAt] = useState('');
   const [filterRole, setFilterRole] = useState('');
-
-  useEffect(() => {
-    if (token) {
-      getUsers(token)
-        .then(({ data }) => {
-          CookieFields.usersArrInLocalStorage(data.users);
-          setUsers(data.users);
-          if (!users) {
-            setUsers(data.users);
-          }
-        })
-        .catch(err => ErrorHandler(err));
-    }
-    if (CookeiFields.getUser() !== undefined) {
-      setCurrentuser(JSON.parse(CookeiFields.getUser()));
-    }
-  }, [token]);
 
   // Function to apply filters
   const applyFilters = () => {
@@ -110,6 +93,23 @@ function Users() {
 
     setUsers(filtered);
   };
+
+  useEffect(() => {
+    if (token) {
+      getUsers(token)
+        .then(({ data }) => {
+          CookieFields.usersArrInLocalStorage(data.users);
+          setUsers(data.users);
+          if (!users) {
+            setUsers(data.users);
+          }
+        })
+        .catch(err => ErrorHandler(err));
+    }
+    if (CookeiFields.getUser() !== undefined) {
+      setCurrentuser(JSON.parse(CookeiFields.getUser()));
+    }
+  }, []);
 
   const handleDeleteuser = id => {
     const updatedUsers = users.filter(item => item._id !== id);
@@ -210,11 +210,10 @@ function Users() {
                 gap={'5'}
                 p={'5px'}
                 rounded={'lg'}
-                bg={'Menu'}
+                bg={'Background'}
               >
                 <Text children="Name" />
                 <Input
-                  focusBorderColor="purple.400"
                   value={filterUsername}
                   onChange={e => setFilterUsername(e.target.value)}
                   size={'sm'}
@@ -226,7 +225,7 @@ function Users() {
                 gap={'5'}
                 p={'5px'}
                 rounded={'lg'}
-                bg={'Menu'}
+                bg={'Background'}
               >
                 <Text children="Email" />
                 <Input
@@ -241,7 +240,7 @@ function Users() {
                 gap={'5'}
                 p={'5px'}
                 rounded={'lg'}
-                bg={'Menu'}
+                bg={'Background'}
               >
                 <Text children="CurrentOrders" />
                 <Input
@@ -256,7 +255,7 @@ function Users() {
                 gap={'5'}
                 p={'5px'}
                 rounded={'lg'}
-                bg={'Menu'}
+                bg={'Background'}
               >
                 <Text children="CreatedAt" />
                 <Input
@@ -271,7 +270,7 @@ function Users() {
                 gap={'5'}
                 p={'5px'}
                 rounded={'lg'}
-                bg={'Menu'}
+                bg={'Background'}
               >
                 <Text children="Role" />
                 <Input
@@ -280,6 +279,9 @@ function Users() {
                   size={'sm'}
                 />
               </Box>
+              <Button onClick={() => applyFilters()} size={'sm'}>
+                Apply Filters
+              </Button>
             </Box>
           )}
         </Box>
