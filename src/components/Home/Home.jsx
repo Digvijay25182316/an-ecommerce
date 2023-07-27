@@ -34,7 +34,7 @@ function Home() {
       <Box display={"flex"} justifyContent={"center"} flexDirection={"column"} alignItems={"center"}>
       <Categories/>
 
-<Button variant={"outline"} borderColor={"yellow.400"} my={"3"} _hover={{ backgroundColor: "yellow.400"}} onClick={()=>setSideBarOpen(!sidebarOpen)}>Filters</Button>
+<Button variant={"outline"} borderColor={"yellow.400"} my={"3"} _hover={{ backgroundColor: "yellow.400"}} onClick={()=>setSideBarOpen(!sidebarOpen)} size={"sm"}>Click Here For Search Filters</Button>
       </Box>
 </VStack>
 <HStack>

@@ -28,15 +28,16 @@ export const categories = [
   "Travel and Luggage"
 ];
 function Categories() {
+  categories.map((item,id)=>console.log(item,id))
     const [category,setCategory] =useState(categories)
   return (
-    <Box maxWidth={"90vw"} borderBottom={"0.5px solid #e4e2e2"}>
-        <HStack overflowX={"scroll"} paddingY={"5"} css={{"&::-webkit-scrollbar":{
+    <Box maxWidth={"90vw"} borderBottom={"0.5px solid #e4e2e2"} mt={"4"}>
+        <HStack overflowX={"scroll"} paddingY={"2"} css={{"&::-webkit-scrollbar":{
   display:"none"
 }}}>
   {
   category&&category.map((item,index)=>
-  <Button key={index} onClick={()=>setCategory(item)} minW={"60"}>
+  <Button key={index} onClick={()=>setCategory(item)} minW={"fit-content"} size={"sm"}>
     <Text children={item}/>
   </Button>
   )}

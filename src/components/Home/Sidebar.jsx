@@ -1,14 +1,47 @@
 import { Box, Checkbox, Heading, Stack, VStack } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+
+function extractNumbersFromString(inputString) {
+  const regex = /\d+/g; // Matches one or more digits
+  const matches = inputString.match(regex);
+  
+  if (!matches) {
+    return [];
+  }
+  const matchedNumber=matches.map(match => parseInt(match, 10))
+  let exact_Number ={
+    min:matchedNumber[0]*1000,
+    max:matchedNumber[2]*1000
+  }
+  if(exact_Number.min===20000){
+    return {min:exact_Number.min}
+  }
+  if(isNaN(exact_Number.max)){
+    return {max:exact_Number.min}
+  }
+  return exact_Number;
+}
 
 function Sidebar() {
+  const [query,setQuery]=useState("")
   const [filters, setFilters] = useState({
     brands: ['OnePlus', 'boAt', 'realme', 'iQOO', 'Redmi', 'Samsung'],
     selectedBrands: [],
     selectedPriceRange: '',
     selectedItemCondition: ''
   });
+  console.log(query)
+  useEffect(() => {
+    const brandKeywords =filters.selectedBrands.length!==0?filters.selectedBrands.length!==1?`[${filters.selectedBrands}]`:filters.selectedBrands.toString():''
+    const min=extractNumbersFromString(filters.selectedPriceRange).min?extractNumbersFromString(filters.selectedPriceRange).min:""
+    const max=extractNumbersFromString(filters.selectedPriceRange).max?extractNumbersFromString(filters.selectedPriceRange).max:""
 
+    // Create the query string based on the selected filters
+    const queryString = `keywords=${brandKeywords}&price${min&&`[gt]`}=${min}&price${max&&`[lt]`}=${max}`;
+
+    // Update the query state and append to the URL
+    setQuery(queryString);
+  }, [filters]);
   const handleFilterChange = (filterType) => (event) => {
     const { value, checked } = event.target;
 

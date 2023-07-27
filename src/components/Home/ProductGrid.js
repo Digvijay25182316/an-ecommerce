@@ -84,11 +84,11 @@ const ProductGrid = ({ products, onPageChange }) => {
                   flexDirection={'column'}
                   alignItems="center"
                 >
-                  <Text fontSize="sm" color="purple.400">
+                  <Text fontSize="sm" color="gray.800">
                     Rating:
                   </Text>
                   <Box display="flex" alignItems="center">
-                    <RatingComponent initialRating={product.rating} />
+                    <RatingComponent initialRating={product.reviews} />
                   </Box>
                 </Box>
                 <Box
@@ -96,10 +96,10 @@ const ProductGrid = ({ products, onPageChange }) => {
                   flexDirection={'column'}
                   alignItems="center"
                 >
-                  <Text fontSize="sm" color="purple.400">
+                  <Text fontSize="sm" color="gray.800">
                     Price:
                   </Text>
-                  <Text color="yellow" mt="1">
+                  <Text color="gray.800" mt="1" fontWeight={'bold'}>
                     $ {product.price}
                   </Text>
                 </Box>

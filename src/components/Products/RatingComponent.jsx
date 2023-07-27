@@ -3,7 +3,7 @@ import { Box, Icon, Stack } from '@chakra-ui/react';
 import { BsStarFill as StarIcon } from 'react-icons/bs';
 
 const Rating = ({ initialRating }) => {
-  const [rating, setRating] = useState(initialRating);
+  const [rating, setRating] = useState(initialRating[0]&&initialRating[0].rating);
 
   const handleRatingClick = (selectedRating) => {
     setRating(selectedRating);
@@ -24,4 +24,4 @@ const Rating = ({ initialRating }) => {
   );
 };
 
-export default Rating;
+export default React.memo(Rating);

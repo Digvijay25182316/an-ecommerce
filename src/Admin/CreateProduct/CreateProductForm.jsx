@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react'
-import { Box, Button, VStack,Input,FormLabel, SimpleGrid} from '@chakra-ui/react'
+import { Box, Button, VStack,Input,FormLabel, SimpleGrid, Select, MenuItemOption} from '@chakra-ui/react'
 import axios from 'axios'
 import { SERVER_URL } from '../../App'
 import { CartContext } from '../../context/store'
+import {categories} from '../../components/Home/Categories'
 export const fileuploadStyle={
     cursor:"pointer",
     marginLeft:"-5%",
@@ -51,6 +52,7 @@ function CreateProductForm() {
     const [name,setName] = useState("")
     const [price,setPrice] = useState("")
     const [description,setDescription] = useState("")
+    const [categoryList,setcategoryList]=useState(categories)
     const [category,setCategory] = useState("")
     const [quantity,setQuantity] = useState("")
     const [features,setFeatures] = useState("")
@@ -133,7 +135,10 @@ function CreateProductForm() {
                 </Box>
                 <Box>
                 <FormLabel htmlFor='category' children="Category"/>
-                <Input required id='Category' value={category} onChange={e=>setCategory(e.target.value)} placeholder='Category' type='Category' focusBorderColor='purple.400'/>
+                <Select required id='Category' value={category} onChange={e=>setCategory(e.target.value)} placeholder='Select Category' type='Category' focusBorderColor='purple.400'>
+                  {categoryList&&categoryList.map((item,index)=>(
+                  <option key={index}>{item}</option>))}
+                </Select>
                 </Box>
                 <Box my={"4"}>
                     

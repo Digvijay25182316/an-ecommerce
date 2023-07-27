@@ -12,6 +12,7 @@ import {
   Text,
   useDisclosure,
   HStack,
+  Input,
 } from '@chakra-ui/react';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import FullScreenModal from './FullScreenModal';
@@ -53,6 +54,13 @@ function Users() {
   const [currentuser, setCurrentuser] = useState({});
   const [users, setUsers] = useState(usersArr ? usersArr : []);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [filterOpen, setFilterOpen] = useState(false);
+
+  const [filterEmail, setFilterEmail] = useState('');
+  const [filterUsername, setFilterUsername] = useState('');
+  const [filterCurrentOrders, setFilterCurrentOrders] = useState('');
+  const [filterCreatedAt, setFilterCreatedAt] = useState('');
+  const [filterRole, setFilterRole] = useState('');
 
   useEffect(() => {
     if (token) {
@@ -69,7 +77,39 @@ function Users() {
     if (CookeiFields.getUser() !== undefined) {
       setCurrentuser(JSON.parse(CookeiFields.getUser()));
     }
-  }, []);
+  }, [token]);
+
+  // Function to apply filters
+  const applyFilters = () => {
+    const filtered = usersArr.filter(user => {
+      // Custom filtering logic based on selected filter values
+      const emailMatch = filterEmail
+        ? user.email?.toLowerCase().includes(filterEmail.toLowerCase())
+        : true;
+      const usernameMatch = filterUsername
+        ? user.name?.toLowerCase().includes(filterUsername.toLowerCase())
+        : true;
+      const currentOrdersMatch = filterCurrentOrders
+        ? user.currentOrders === parseInt(filterCurrentOrders)
+        : true;
+      const createdAtMatch = filterCreatedAt
+        ? user.createdAt.includes(filterCreatedAt)
+        : true;
+      const roleMatch = filterRole
+        ? user.role?.toLowerCase() === filterRole.toLowerCase()
+        : true;
+
+      return (
+        emailMatch &&
+        usernameMatch &&
+        currentOrdersMatch &&
+        createdAtMatch &&
+        roleMatch
+      );
+    });
+
+    setUsers(filtered);
+  };
 
   const handleDeleteuser = id => {
     const updatedUsers = users.filter(item => item._id !== id);
@@ -150,6 +190,98 @@ function Users() {
       <Box display={'flex'} flexDirection={'column'} m={'20px'}>
         <Box fontWeight={'bold'} fontSize={'34px'} margin={'23px'}>
           <Text>Users</Text>
+        </Box>
+        <Box width={'90vw'}>
+          <Button size={'sm'} onClick={() => setFilterOpen(!filterOpen)}>
+            Filters
+          </Button>
+          {filterOpen && (
+            <Box
+              display={'flex'}
+              flexDirection={'column'}
+              position={'absolute'}
+              height={'fit-content'}
+              width={['50vw', '20vw']}
+              gap={'2px'}
+            >
+              <Box
+                display={'flex'}
+                alignItems={'center'}
+                gap={'5'}
+                p={'5px'}
+                rounded={'lg'}
+                bg={'Menu'}
+              >
+                <Text children="Name" />
+                <Input
+                  focusBorderColor="purple.400"
+                  value={filterUsername}
+                  onChange={e => setFilterUsername(e.target.value)}
+                  size={'sm'}
+                />
+              </Box>
+              <Box
+                display={'flex'}
+                alignItems={'center'}
+                gap={'5'}
+                p={'5px'}
+                rounded={'lg'}
+                bg={'Menu'}
+              >
+                <Text children="Email" />
+                <Input
+                  value={filterEmail}
+                  onChange={e => setFilterEmail(e.target.value)}
+                  size={'sm'}
+                />
+              </Box>
+              <Box
+                display={'flex'}
+                alignItems={'center'}
+                gap={'5'}
+                p={'5px'}
+                rounded={'lg'}
+                bg={'Menu'}
+              >
+                <Text children="CurrentOrders" />
+                <Input
+                  value={filterCurrentOrders}
+                  onChange={e => setFilterCurrentOrders(e.target.value)}
+                  size={'sm'}
+                />
+              </Box>
+              <Box
+                display={'flex'}
+                alignItems={'center'}
+                gap={'5'}
+                p={'5px'}
+                rounded={'lg'}
+                bg={'Menu'}
+              >
+                <Text children="CreatedAt" />
+                <Input
+                  value={filterCreatedAt}
+                  onChange={e => setFilterCreatedAt(e.target.value)}
+                  size={'sm'}
+                />
+              </Box>
+              <Box
+                display={'flex'}
+                alignItems={'center'}
+                gap={'5'}
+                p={'5px'}
+                rounded={'lg'}
+                bg={'Menu'}
+              >
+                <Text children="Role" />
+                <Input
+                  value={filterRole}
+                  onChange={e => setFilterRole(e.target.value)}
+                  size={'sm'}
+                />
+              </Box>
+            </Box>
+          )}
         </Box>
         <Stack
           overflowX={'scroll'}
