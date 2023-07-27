@@ -28,7 +28,6 @@ export const categories = [
   "Travel and Luggage"
 ];
 function Categories() {
-  categories.map((item,id)=>console.log(item,id))
     const [category,setCategory] =useState(categories)
   return (
     <Box maxWidth={"90vw"} borderBottom={"0.5px solid #e4e2e2"} mt={"4"}>
