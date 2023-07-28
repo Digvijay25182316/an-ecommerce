@@ -1,32 +1,18 @@
 import { Box, Button, HStack, Text } from '@chakra-ui/react';
 import React, { useState } from 'react'
 export const categories = [
-  "Electronics",
-  "Computers and Accessories",
-  "Mobile Phones and Tablets",
-  "Home Appliances",
-  "Furniture",
-  "Home Decor",
-  "Kitchen and Dining",
-  "Bedding and Bath",
-  "Clothing and Apparel",
-  "Shoes and Accessories",
-  "Beauty and Personal Care",
-  "Health and Wellness",
-  "Sports and Fitness",
-  "Toys and Games",
-  "Books and Media",
-  "Automotive and Tools",
-  "Baby and Maternity",
-  "Jewelry and Watches",
-  "Bags and Luggage",
-  "Pet Supplies",
-  "Office and School Supplies",
-  "Party and Celebration",
-  "Crafts and Hobbies",
-  "Outdoor and Gardening",
-  "Travel and Luggage"
-];
+  "Solapur Chadar",
+  "Solapur Satranji",
+  "Galicha",
+  "Turkish Towel",
+  "Pancha Towel",
+  "Baithak Patti",
+  "Napkin",
+  "Bedsheet Blanket",
+  "Handmade Purse",
+  "Travel Bags",
+  "Freeze Cover"
+]
 function Categories() {
     const [category,setCategory] =useState(categories)
   return (

@@ -6,7 +6,6 @@ import axios from 'axios'
 import { SERVER_URL } from '../../App'
 import CookieFields from '../../context/utils'
 import { CartContext } from '../../context/store'
-import Cookies from 'js-cookie'
 
 const changeProfileImage = async(formdata,token)=>{
     const data = await axios.put(`${SERVER_URL}/updateprofilepicture`,formdata,{
