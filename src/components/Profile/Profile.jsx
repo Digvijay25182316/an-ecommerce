@@ -38,14 +38,12 @@ const  userDetails=JSON.parse(CookieFields.getUser())
     }
     useEffect(()=>{
         const token = CookieFields.getToken()
-        if(!userDetails){
         loadingHandler(true)
         getProfile(token).then(data=>{
             setUser(data.data.user)
             CookieFields.userInCookie(data.data.user)
             successHandler(data.data)        
         }).catch(err=>ErrorHandler(err))
-    }
     },[user])
 
     const {isOpen,onClose , onOpen} =useDisclosure()
