@@ -103,8 +103,8 @@ const FullScreenModal = ({
   const handleSubmit = e => {
     const imageToUse = convertedWebpImage || Prevewimage;
     formdata.append('file', imageToUse);
-    e.pereventDefault();
     loadingHandler(true);
+    e.preventDefault();
     updateProductDetails(id, token, formdata)
       .then(data => {
         successHandler(data.data);
@@ -177,7 +177,6 @@ const FullScreenModal = ({
                   <FormLabel htmlFor="chooseAvtar" children="chooseAvatar" />
                   <Input
                     accept={'image/*'}
-                    required
                     id="chooseAvatar"
                     onChange={handleImageUpload}
                     type="file"

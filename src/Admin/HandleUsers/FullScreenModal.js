@@ -11,7 +11,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
-  Input,
+  Select,
   FormLabel,
 } from '@chakra-ui/react';
 import { CartContext } from '../../context/store';
@@ -61,12 +61,17 @@ const FullScreenModal = ({ isOpen, onClose, userRole, id }) => {
                 <VStack spacing={'8'}>
                   <Box width={'100%'}>
                     <FormLabel children={'User Role'} />
-                    <Input
+                    <Select
                       type="text"
                       value={role}
                       onChange={e => setRole(e.target.value)}
                       focusBorderColor="purple.400"
-                    />
+                      placeholder={role}
+                    >
+                      <option value={role === 'user' ? 'admin' : 'user'}>
+                        {role === 'user' ? 'admin' : 'user'}
+                      </option>
+                    </Select>
                   </Box>
                   <Button
                     onClick={Closehandler}
