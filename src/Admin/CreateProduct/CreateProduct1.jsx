@@ -25,14 +25,11 @@ function CreateProduct() {
   const [product,setProduct] = useState(ProductsArr?ProductsArr:[])
 
   useEffect(() => {
-    if(!ProductsArr){
-    loadingHandler(true)
     getProducts().then(({ data }) => {
       setProduct(data.products);
       successHandler(data)
     }).catch(err=>ErrorHandler(err));
-  }
-  },[]);
+  },[product]);
   return (
     <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
       <HStack m={'20px'}>
