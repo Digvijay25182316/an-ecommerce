@@ -31,18 +31,20 @@ const getProfile=async(token)=>{
 function Profile() {
 const  userDetails=JSON.parse(CookieFields.getUser())
     const [user,setUser]=useState(userDetails?userDetails:{})
-    const {ErrorHandler,successHandler,loadingHandler} = useContext(CartContext)
+    const {ErrorHandler,successHandler} = useContext(CartContext)
 
     const changeImageSubmitHandler=({e,image})=>{
         e.preventDefault()
     }
     useEffect(()=>{
         const token = CookieFields.getToken()
+        if(token){
         getProfile(token).then(data=>{
             setUser(data.data.user)
             CookieFields.userInCookie(data.data.user)
             successHandler(data.data)        
         }).catch(err=>ErrorHandler(err))
+    }
     },[user])
 
     const {isOpen,onClose , onOpen} =useDisclosure()
