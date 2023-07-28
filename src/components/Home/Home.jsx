@@ -11,7 +11,7 @@ const  ProductGrid =React.lazy(()=>import('./ProductGrid'));
 
 const getProducts = async (query) => {
   const data = await axios.get(`${SERVER_URL}/products`,{
-    params:query
+    ...(query&&{params:query})
   })
   return data;
 };
@@ -21,12 +21,12 @@ function Home() {
   const ProductsArr=CookieFields.ProductsArrFromLocalStorage()
   const [sidebarOpen,setSideBarOpen] =useState(false)
   const [products,setProducts]=useState(ProductsArr?ProductsArr:[])
-
+  
   useEffect(() => {
     getProducts(query).then(({ data }) => {
       CookieFields.ProductsArrInLocalStorage(data.products)
       setProducts(data.products);
-    }).catch(err=>ErrorHandler(err));
+    }).catch(err=>{ErrorHandler(err);console.log(err)});
   },[query]);
   
   return (
@@ -40,7 +40,7 @@ function Home() {
       </Box>
 </VStack>
 <HStack>
-  {sidebarOpen&&<Box width={["80vw","20vw"]} height={"100vh"} alignSelf={"flex-start"} position={"absolute"} boxShadow={"lg"} rounded={"lg"} ml={"20px"}>
+  {sidebarOpen&&<Box width={["80vw","20vw"]} height={"100vh"} alignSelf={"flex-start"} position={"absolute"} boxShadow={"lg"} rounded={"lg"} ml={"20px"} >
     <Box display={"flex"} justifyContent={"space-between"} bg={"yellow.400"} alignItems={"center"} borderRadius={"10px 10px 0 0"}>
     <Text children="Filter" width={"full"} p={"5"} fontWeight={"bold"} fontFamily={"sans-serif"}/>
       <Button onClick={()=>setSideBarOpen(!sidebarOpen)} variant={"unstyled"} colorScheme='orange' color={"black"} >

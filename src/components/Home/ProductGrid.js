@@ -7,15 +7,18 @@ import {
   Text,
   Button,
   HStack,
+  VStack,
+  Center,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import RatingComponent from '../Products/RatingComponent';
 import { CartContext } from '../../context/store';
+import { RiEmotionSadFill } from 'react-icons/ri';
 
 const ProductGrid = ({ products, onPageChange }) => {
   const { loadingHandler } = useContext(CartContext);
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage, setProductsPerPage] = useState(30);
+  const [productsPerPage] = useState(30);
 
   const totalPages = Math.ceil(products.length / productsPerPage);
 
@@ -32,17 +35,17 @@ const ProductGrid = ({ products, onPageChange }) => {
 
   return (
     <Box
-      display={'flex'}
-      flexDirection={'column'}
-      alignItems={'center'}
-      justifyContent={'center'}
-      w={'95vw'}
-      top={'100px'}
-      m={'auto'}
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      w="95vw"
+      top="100px"
+      m="auto"
     >
-      <SimpleGrid columns={[2, 2, 3, 4, 5]} spacing={6}>
-        {visibleProducts &&
-          visibleProducts.map(product => (
+      {products.length > 0 ? (
+        <SimpleGrid columns={[2, 2, 3, 4, 5]} spacing={6} minHeight={'70vh'}>
+          {visibleProducts.map(product => (
             <Link
               to={`/product/${product._id}`}
               key={product._id}
@@ -55,19 +58,15 @@ const ProductGrid = ({ products, onPageChange }) => {
                 borderWidth="1px"
                 borderRadius="md"
                 boxShadow="md"
-                display={'flex'}
-                flexDirection={'column'}
-                alignItems={'center'}
-                maxH={'450px'}
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                maxH="450px"
                 transition="transform 0.2s"
                 _hover={{ transform: 'scale(1.05)' }}
-                bg={'ButtonShadow'}
+                bg="ButtonShadow"
               >
-                <Box
-                  display={'flex'}
-                  flexDirection={'column'}
-                  alignItems={'center'}
-                >
+                <Box display="flex" flexDirection="column" alignItems="center">
                   <Image
                     src={product.poster.url}
                     alt={product.name}
@@ -79,11 +78,7 @@ const ProductGrid = ({ products, onPageChange }) => {
                     {product.name}
                   </Heading>
                 </Box>
-                <Box
-                  display="flex"
-                  flexDirection={'column'}
-                  alignItems="center"
-                >
+                <Box display="flex" flexDirection="column" alignItems="center">
                   <Text fontSize="sm" color="gray.800">
                     Rating:
                   </Text>
@@ -91,28 +86,32 @@ const ProductGrid = ({ products, onPageChange }) => {
                     <RatingComponent initialRating={product.reviews} />
                   </Box>
                 </Box>
-                <Box
-                  display="flex"
-                  flexDirection={'column'}
-                  alignItems="center"
-                >
+                <Box display="flex" flexDirection="column" alignItems="center">
                   <Text fontSize="sm" color="gray.800">
                     Price:
                   </Text>
-                  <Text color="gray.800" mt="1" fontWeight={'bold'}>
+                  <Text color="gray.800" mt="1" fontWeight="bold">
                     $ {product.price}
                   </Text>
                 </Box>
               </Box>
             </Link>
           ))}
-      </SimpleGrid>
+        </SimpleGrid>
+      ) : (
+        <Center minHeight={'70vh'} fontWeight={'bold'} color={'gray.400'}>
+          <Box display={'flex'} alignItems={'center'} flexDirection={'column'}>
+            <RiEmotionSadFill size={'xl'} />
+            <Text children="There is no Product to show" fontSize={'2xl'} />
+          </Box>
+        </Center>
+      )}
       <HStack mt={4} spacing={2}>
         {Array.from({ length: totalPages }, (_, index) => (
           <Button
             key={index}
             size="sm"
-            colorScheme={currentPage === index + 1 ? 'yellow.400' : 'gray'}
+            colorScheme={currentPage === index + 1 ? 'yellow' : 'gray'}
             onClick={() => handlePageChange(index + 1)}
           >
             {index + 1}

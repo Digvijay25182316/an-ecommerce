@@ -36,15 +36,17 @@ const  userDetails=JSON.parse(CookieFields.getUser())
         e.preventDefault()
     }
     const token = CookieFields.getToken()
-    useEffect(()=>{
-        if(token){
-        getProfile(token).then(data=>{
-            setUser(data.data.user)
-            CookieFields.userInCookie(data.data.user)
-            successHandler(data.data)        
-        }).catch(err=>ErrorHandler(err))
-    }
-    },[user,token])
+    useEffect(() => {
+        if (token) {
+          getProfile(token)
+            .then((data) => {
+              setUser(data.data.user);
+              CookieFields.userInCookie(data.data);
+              successHandler(data.data);
+            })
+            .catch((err) => ErrorHandler(err));
+        }
+      }, [token]);
 
     const {isOpen,onClose , onOpen} =useDisclosure()
   return (

@@ -1,6 +1,7 @@
-import { Box, Checkbox, Heading, Stack, VStack } from '@chakra-ui/react'
+import { Box, Checkbox, Heading, Input, Stack, VStack } from '@chakra-ui/react'
 import React, { useContext, useEffect, useState } from 'react'
 import { CartContext } from '../../context/store';
+import {categories} from "../Home/Categories"
 
 function extractNumbersFromString(inputString) {
   const regex = /\d+/g; // Matches one or more digits
@@ -26,7 +27,7 @@ function extractNumbersFromString(inputString) {
 function Sidebar() {
   const {storeQuery}=useContext(CartContext)
   const [filters, setFilters] = useState({
-    brands: ['OnePlus', 'boAt', 'realme', 'iQOO', 'Redmi', 'Samsung'],
+    brands: categories,
     selectedBrands: [],
     selectedPriceRange: '',
     selectedItemCondition: ''
