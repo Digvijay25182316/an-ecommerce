@@ -19,7 +19,7 @@ const getProducts =async()=>{
 }
 
 function CreateProduct() {
-  const {loadingHandler,successHandler,ErrorHandler}=useContext(CartContext)
+  const {successHandler,ErrorHandler}=useContext(CartContext)
   const [isViewOn,setIsViewOff] = useState(false)
   const ProductsArr = CookieFields.ProductsArrFromLocalStorage()
   const [product,setProduct] = useState(ProductsArr?ProductsArr:[])

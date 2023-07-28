@@ -35,8 +35,8 @@ const  userDetails=JSON.parse(CookieFields.getUser())
     const changeImageSubmitHandler=({e,image})=>{
         e.preventDefault()
     }
+    const token = CookieFields.getToken()
     useEffect(()=>{
-        const token = CookieFields.getToken()
         if(token){
         getProfile(token).then(data=>{
             setUser(data.data.user)
@@ -44,7 +44,7 @@ const  userDetails=JSON.parse(CookieFields.getUser())
             successHandler(data.data)        
         }).catch(err=>ErrorHandler(err))
     }
-    },[user])
+    },[user,token])
 
     const {isOpen,onClose , onOpen} =useDisclosure()
   return (

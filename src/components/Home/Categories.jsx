@@ -1,7 +1,7 @@
 import { Box, Button, HStack, Text } from '@chakra-ui/react';
 import React, { useState } from 'react'
 export const categories = [
-  "Solapur Chadar",
+  "Solapur Chaddar",
   "Solapur Satranji",
   "Galicha",
   "Turkish Towel",
