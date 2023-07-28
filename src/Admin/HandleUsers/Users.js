@@ -109,7 +109,7 @@ function Users() {
     if (CookeiFields.getUser() !== undefined) {
       setCurrentuser(JSON.parse(CookeiFields.getUser()));
     }
-  }, []);
+  }, [token]);
 
   const handleDeleteuser = id => {
     const updatedUsers = users.filter(item => item._id !== id);
